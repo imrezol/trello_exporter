@@ -1,34 +1,42 @@
 package com.github.imrezol.trelloexporter;
 
-import org.springframework.shell.Availability;
+import com.github.imrezol.trelloexporter.trello.service.API;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.*;
 
-import java.util.Optional;
+import java.util.List;
 
 @ShellComponent
 @ShellCommandGroup("Trello commands")
 public class TrelloCommands {
 
-    private Optional<String> apiKey = Optional.empty();
 
-    @ShellMethod(key = "api-key", value = "Set Trello API key")
-    public String setApiKey(
-            @ShellOption(defaultValue = "spring") String newApiKey
-    ) {
-        apiKey = Optional.of(newApiKey);
-        return "API key set.";
+    @Autowired
+    private API trelloApi;
+
+
+    @ShellMethod(key = "e", value = "Export")
+    public String export() {
+
+        List<String> boards = trelloApi.getBoards()
+                .stream()
+                .map(board -> String.format("%s: %s , %s", board.id, board.name, board.desc))
+                .toList();
+
+        return "Boards:\n" + String.join("\n", boards);
     }
 
-    @ShellMethod(key = "list-boards", value = "List boards")
+
+    @ShellMethod(key = "l", value = "List boards")
     public String listBoards(
     ) {
-        return "Boards";
-    }
+        List<String> boards = trelloApi.getBoards()
+                .stream()
+                .map(board -> String.format("%s: %s , %s", board.id, board.name, board.desc))
+                .toList();
 
-    @ShellMethodAvailability({"list-boards"})
-    public Availability apiKeyCheck()
-    {
-        return apiKey.isPresent() ? Availability.available() : Availability.unavailable("You must set Trello API key first");
+
+        return "Boards:\n" + String.join("\n", boards);
     }
 
 }
