@@ -2,10 +2,13 @@ package com.github.imrezol.trelloexporter.trello.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Board {
+public class Card {
 
     @JsonProperty("id")
     public String id;
+
+    @JsonProperty("address")
+    public String address;
 
     @JsonProperty("name")
     public String name;
@@ -15,4 +18,7 @@ public class Board {
 
     @JsonProperty("closed")
     public boolean closed;
+
+    public String dateLastActivity;
+
 }
