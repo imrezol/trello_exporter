@@ -2,6 +2,7 @@ package com.github.imrezol.trelloexporter.trello.service;
 
 import com.github.imrezol.trelloexporter.trello.dto.Board;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
+import com.github.imrezol.trelloexporter.trello.dto.CardDetails;
 import com.github.imrezol.trelloexporter.trello.dto.TrelloList;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
@@ -91,6 +92,21 @@ public class API {
         return response.getBody();
     }
 
+    public CardDetails getCard(String cardId) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url = generateUrl(String.format("1/cards/%s",cardId));
+
+        final String response = restTemplate.getForObject(url, String.class);
+
+        System.out.println("-------------------------------");
+        System.out.println(response);
+        System.out.println("-------------------------------");
+
+        return null;
+
+    }
+
     private String generateUrl(String path){
         return UriComponentsBuilder.newInstance()
                 .scheme("https")
@@ -101,5 +117,4 @@ public class API {
                 .encode()
                 .toUriString();
     }
-
 }

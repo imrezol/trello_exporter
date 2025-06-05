@@ -39,7 +39,9 @@ public class TrelloExporterApplication
 
 		cards.forEach(card -> {
 			System.out.printf("%s, %s%n",card.name, card.desc);
+			trelloAPI.getCard(card.id);
 		});
+
 	}
 
 }
