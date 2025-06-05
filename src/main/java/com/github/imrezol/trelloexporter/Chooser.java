@@ -83,7 +83,7 @@ public class Chooser {
 
 
             String line = reader.readLine(String.format("Choose list (0-%d, default:0): ", trelloLists.size()-1));
-            if (line == null) {
+            if (line == null || line.isBlank()) {
                 listId = trelloLists.getFirst().id;
             } else {
                 int idx = Integer.parseInt(line);
