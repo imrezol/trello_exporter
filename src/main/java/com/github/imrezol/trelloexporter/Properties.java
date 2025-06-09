@@ -29,10 +29,6 @@ public class Properties {
         return boardsFilename + ".md";
     }
 
-    public String getBoardsJson() {
-        return boardsFilename + ".json";
-    }
-
     public String getBoardMd() {
         return boardFilename + ".md";
     }

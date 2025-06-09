@@ -95,18 +95,12 @@ public class TrelloApi {
         return response.getBody();
     }
 
-    public CardDetails getCard(String cardId) {
+    public String getCard(String cardId) {
         RestTemplate restTemplate = new RestTemplate();
 
         String url = generateUrl(String.format("1/cards/%s",cardId));
 
-        final String response = restTemplate.getForObject(url, String.class);
-
-        System.out.println("-------------------------------");
-        System.out.println(response);
-        System.out.println("-------------------------------");
-
-        return null;
+        return restTemplate.getForObject(url, String.class);
 
     }
 

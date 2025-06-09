@@ -1,6 +1,8 @@
 package com.github.imrezol.trelloexporter.trello.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Card {
 
@@ -21,4 +23,13 @@ public class Card {
 
     public String dateLastActivity;
 
+    public static Card fromJson(String jsonString) {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(jsonString, Card.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

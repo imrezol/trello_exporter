@@ -98,8 +98,8 @@ public class BoardExporter {
                 if (cards.size()>rowIndex) {
                     wasCard = true;
                     Card card = cards.get(rowIndex);
-                    cells.add( new Link(card.name, Utils.getUrl(properties.getCardMd(),card.id))) ;
-                    cardExporter.export(card);
+                    cells.add( new Link(card.name, Utils.getUrl(properties.getCardMd(), card.id))) ;
+                    cardExporter.export(board, card);
                 } else {
                     cells.add(null);
                 }
