@@ -11,15 +11,15 @@ public class Utils {
         new File(dir).mkdirs();
     }
 
-    public static String getFilename(String filename, String... dirParts) {
+    public static String getUrl(String filename, String... dirParts) {
         String dirName = String.join("/", dirParts);
-        ensureDirectory(dirName);
         return dirName + "/" + filename;
     }
 
-    public static void saveToFile(String filename, String json) {
+    public static void saveToFile(Path path, String json) {
         try {
-            Files.writeString(Path.of(filename), json, StandardCharsets.UTF_8);
+            ensureDirectory(path.getParent().toString());
+            Files.writeString(path, json, StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

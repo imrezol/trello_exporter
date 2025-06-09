@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,23 +35,26 @@ public class BoardExporter {
     @Autowired
     private Properties properties;
 
+    @Autowired
+    private CardExporter cardExporter;
+
     public void export(Board board) {
 
         logger.info("Exporting board:{}", board.name);
 
-        saveJson(board);
+        saveToJson(board);
 
         List<TrelloList> trelloLists = trelloApi.getLists(board.id)
                 .stream()
                 .filter(trelloList -> !trelloList.closed).toList();
 
-        String fileName = Utils.getFilename(properties.getBoardMd(), properties.baseDir, board.id);
+        Path fileName = Paths.get(properties.baseDir, board.id, properties.getBoardMd());
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName.toString(), true))) {
             writer.write(getHeader(board));
             writer.newLine();
 
-            writer.write(getLists(board, trelloLists));
+            writer.write(generateLists(board, trelloLists));
             writer.newLine();
 
         } catch (IOException e) {
@@ -57,12 +62,13 @@ public class BoardExporter {
         }
     }
 
-    private void saveJson(Board board) {
-        String json = trelloApi.getBoard(board.id);
-        Utils.saveToFile(Utils.getFilename(properties.getBoardJson(), properties.baseDir, board.id), json);
+    private void saveToJson(Board board) {
+        String json = trelloApi.getBoardJson(board.id);
+        Utils.saveToFile(Paths.get(properties.baseDir, board.id, properties.getBoardJson()), json);
     }
 
-    private String getLists(Board board, List<TrelloList> trelloLists){
+
+    private String generateLists(Board board, List<TrelloList> trelloLists){
 
         Map<String, List<Card>> cardsByList = new HashMap<>();
         for (TrelloList list : trelloLists) {
@@ -92,7 +98,8 @@ public class BoardExporter {
                 if (cards.size()>rowIndex) {
                     wasCard = true;
                     Card card = cards.get(rowIndex);
-                    cells.add( new Link(card.name, Utils.getFilename(properties.getCardMd(),card.id))) ;
+                    cells.add( new Link(card.name, Utils.getUrl(properties.getCardMd(),card.id))) ;
+                    cardExporter.export(card);
                 } else {
                     cells.add(null);
                 }
@@ -109,6 +116,7 @@ public class BoardExporter {
         return tableBuilder.build().toString();
 
     }
+
 
     private String getHeader(Board board) {
         StringBuilder sb = new StringBuilder()

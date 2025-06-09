@@ -21,6 +21,10 @@ import java.util.List;
 public class TrelloApi {
 
 
+    private static final String SCHEME = "https";
+    public static final String API_URL = "api.trello.com";
+
+
     @Value("${trello.apikey}")
     private String apiKey;
 
@@ -38,18 +42,10 @@ public class TrelloApi {
 
     public List<Board> getBoards(){
         RestTemplate restTemplate = new RestTemplate();
-        String url = UriComponentsBuilder.newInstance()
-                .scheme("https")
-                .host("api.trello.com")
-                .path("1/members/me/boards")
-                .queryParam("key", apiKey)
-                .queryParam("token", token)
-                .encode()
-                .toUriString();
 
         HttpEntity<Board> requestEntity = new HttpEntity<>(null, headers);
 
-        ResponseEntity<List<Board>> response = restTemplate.exchange(url,
+        ResponseEntity<List<Board>> response = restTemplate.exchange(generateUrl("1/members/me/boards"),
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<>() {
@@ -58,16 +54,9 @@ public class TrelloApi {
         return response.getBody();
     }
 
-    public String getBoard(String boardId){
+    public String getBoardJson(String boardId){
         RestTemplate restTemplate = new RestTemplate();
-        String url = UriComponentsBuilder.newInstance()
-                .scheme("https")
-                .host("api.trello.com")
-                .path(String.format("1//boards/%s", boardId))
-                .queryParam("key", apiKey)
-                .queryParam("token", token)
-                .encode()
-                .toUriString();
+        String url = generateUrl(String.format("1//boards/%s", boardId));
 
         return restTemplate.getForObject(url, String.class);
     }
@@ -88,6 +77,7 @@ public class TrelloApi {
 
         return response.getBody();
     }
+
 
     public List<Card> getCards(String listId){
         RestTemplate restTemplate = new RestTemplate();
@@ -122,12 +112,14 @@ public class TrelloApi {
 
     private String generateUrl(String path){
         return UriComponentsBuilder.newInstance()
-                .scheme("https")
-                .host("api.trello.com")
+                .scheme(SCHEME)
+                .host(API_URL)
                 .path(path)
                 .queryParam("key", apiKey)
                 .queryParam("token", token)
                 .encode()
                 .toUriString();
     }
+
+
 }

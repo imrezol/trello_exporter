@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -47,13 +49,15 @@ public class BoardsExporter {
                 .withAlignments(Table.ALIGN_LEFT, Table.ALIGN_LEFT)
                 .addRow("Name", "Description");
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Utils.getFilename(properties.getBoardsMd(), properties.baseDir), true))) {
+        Utils.ensureDirectory(properties.baseDir);
+        Path fileName = Paths.get(properties.baseDir, properties.getBoardsMd());
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName.toString(), true))) {
             writer.write(sb.toString());
             writer.newLine();
 
             boards.forEach(board -> {
-                String fileName = Utils.getFilename(properties.getBoardMd() , board.id);
-                Link link = new Link(board.name, fileName);
+                String boardUrl = Utils.getUrl(properties.getBoardMd() , board.id);
+                Link link = new Link(board.name, boardUrl);
 
                 tableBuilder.addRow(link, board.desc);
 
