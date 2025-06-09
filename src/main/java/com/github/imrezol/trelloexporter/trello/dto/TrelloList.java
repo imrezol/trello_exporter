@@ -9,4 +9,7 @@ public class TrelloList {
 
     @JsonProperty("name")
     public String name;
+
+    @JsonProperty("closed")
+    public boolean closed;
 }

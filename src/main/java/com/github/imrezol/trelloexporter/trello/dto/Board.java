@@ -15,4 +15,5 @@ public class Board {
 
     @JsonProperty("closed")
     public boolean closed;
+
 }

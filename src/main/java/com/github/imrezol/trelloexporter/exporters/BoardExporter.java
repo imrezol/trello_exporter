@@ -1,0 +1,121 @@
+package com.github.imrezol.trelloexporter.exporters;
+
+import com.github.imrezol.trelloexporter.Properties;
+import com.github.imrezol.trelloexporter.Utils;
+import com.github.imrezol.trelloexporter.trello.dto.Board;
+import com.github.imrezol.trelloexporter.trello.dto.Card;
+import com.github.imrezol.trelloexporter.trello.dto.TrelloList;
+import com.github.imrezol.trelloexporter.trello.service.TrelloApi;
+import net.steppschuh.markdowngenerator.link.Link;
+import net.steppschuh.markdowngenerator.table.Table;
+import net.steppschuh.markdowngenerator.text.heading.Heading;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class BoardExporter {
+
+    private static final Logger logger = LoggerFactory.getLogger(BoardExporter.class);
+
+    @Autowired
+    private TrelloApi trelloApi;
+
+    @Autowired
+    private Properties properties;
+
+    public void export(Board board) {
+
+        logger.info("Exporting board:{}", board.name);
+
+        saveJson(board);
+
+        List<TrelloList> trelloLists = trelloApi.getLists(board.id)
+                .stream()
+                .filter(trelloList -> !trelloList.closed).toList();
+
+        String fileName = Utils.getFilename(properties.getBoardMd(), properties.baseDir, board.id);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
+            writer.write(getHeader(board));
+            writer.newLine();
+
+            writer.write(getLists(board, trelloLists));
+            writer.newLine();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void saveJson(Board board) {
+        String json = trelloApi.getBoard(board.id);
+        Utils.saveToFile(Utils.getFilename(properties.getBoardJson(), properties.baseDir, board.id), json);
+    }
+
+    private String getLists(Board board, List<TrelloList> trelloLists){
+
+        Map<String, List<Card>> cardsByList = new HashMap<>();
+        for (TrelloList list : trelloLists) {
+            String listId = list.id;
+            List<Card> cards = trelloApi.getCards(listId);
+            cardsByList.put(listId, cards);
+        }
+
+        trelloLists.forEach(trelloList -> {
+            List<Card> cards = trelloApi.getCards(trelloList.id);
+            cardsByList.put(trelloList.id, cards);
+        });
+
+        Table.Builder tableBuilder = new Table.Builder()
+//                .withAlignments(Table.ALIGN_LEFT, Table.ALIGN_LEFT)
+                .addRow(trelloLists.stream().map(trelloList -> trelloList.name).toArray());
+
+        int rowIndex = 0;
+        while (true) {
+
+
+            List<Object> cells = new ArrayList<>();
+            boolean wasCard = false;
+            for (TrelloList trelloList : trelloLists) {
+
+                List<Card> cards = cardsByList.get(trelloList.id);
+                if (cards.size()>rowIndex) {
+                    wasCard = true;
+                    Card card = cards.get(rowIndex);
+                    cells.add( new Link(card.name, Utils.getFilename(properties.getCardMd(),card.id))) ;
+                } else {
+                    cells.add(null);
+                }
+            }
+
+            if (wasCard) {
+                tableBuilder.addRow(cells.toArray());
+            } else {
+                break;
+            }
+            rowIndex++;
+        }
+
+        return tableBuilder.build().toString();
+
+    }
+
+    private String getHeader(Board board) {
+        StringBuilder sb = new StringBuilder()
+                .append(new Heading("Board: " + board.name, 1)).append("\n")
+                .append("Description: " + board.desc).append("\n")
+                .append(new Link("<br>\nBack to boards","../Boards.md")).append("\n");
+
+        return sb.toString();
+    }
+}

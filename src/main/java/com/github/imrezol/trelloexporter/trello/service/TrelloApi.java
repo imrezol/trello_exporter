@@ -18,7 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 
 @Service
-public class API {
+public class TrelloApi {
 
 
     @Value("${trello.apikey}")
@@ -38,7 +38,6 @@ public class API {
 
     public List<Board> getBoards(){
         RestTemplate restTemplate = new RestTemplate();
-        //String url = "https://api.trello.com/1/members/me/boards?key={APIKey}&token={APIToken}";
         String url = UriComponentsBuilder.newInstance()
                 .scheme("https")
                 .host("api.trello.com")
@@ -57,6 +56,20 @@ public class API {
                 });
 
         return response.getBody();
+    }
+
+    public String getBoard(String boardId){
+        RestTemplate restTemplate = new RestTemplate();
+        String url = UriComponentsBuilder.newInstance()
+                .scheme("https")
+                .host("api.trello.com")
+                .path(String.format("1//boards/%s", boardId))
+                .queryParam("key", apiKey)
+                .queryParam("token", token)
+                .encode()
+                .toUriString();
+
+        return restTemplate.getForObject(url, String.class);
     }
 
     public List<TrelloList> getLists(String boardId){
