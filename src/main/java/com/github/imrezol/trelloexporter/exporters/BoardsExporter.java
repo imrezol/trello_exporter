@@ -43,7 +43,11 @@ public class BoardsExporter {
                 .toList();
 
         StringBuilder sb = new StringBuilder()
-                .append(new Heading("Boards:", 1)).append("\n");
+                .append("Export date: ").append(Utils.dateToString(properties.exportDate)).append("\n")
+                .append("<br>").append("\n")
+                .append(new Heading("Boards:", 1)).append("\n")
+                .append("<br>").append("\n");
+
 
         Table.Builder tableBuilder = new Table.Builder()
                 .withAlignments(Table.ALIGN_LEFT, Table.ALIGN_LEFT)

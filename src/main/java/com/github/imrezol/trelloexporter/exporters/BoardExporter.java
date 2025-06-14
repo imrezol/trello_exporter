@@ -9,6 +9,7 @@ import com.github.imrezol.trelloexporter.trello.service.TrelloApi;
 import net.steppschuh.markdowngenerator.link.Link;
 import net.steppschuh.markdowngenerator.table.Table;
 import net.steppschuh.markdowngenerator.text.heading.Heading;
+import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,9 +125,14 @@ public class BoardExporter {
 
     private String getHeader(Board board) {
         StringBuilder sb = new StringBuilder()
-                .append(new Heading("Board: " + board.name, 1)).append("\n")
-                .append("Description: " + board.desc).append("\n")
-                .append(new Link("<br>\nBack to boards","../Boards.md")).append("\n");
+                .append("Export date: ").append(Utils.dateToString(properties.exportDate)).append("\n")
+                .append("<br>").append("\n")
+                .append(new Link("Back to boards","../Boards.md")).append("\n")
+                .append("<br>").append("\n")
+                .append(new Heading("Board: " + board.name, 1)).append("\n");
+                if (!Strings.isBlank(board.desc)) {
+                    sb.append("Description: " + board.desc).append("\n");
+                }
 
         return sb.toString();
     }

@@ -57,18 +57,20 @@ public class CardExporter {
 
     private void generateCard(BufferedWriter writer, Card card) throws IOException {
         StringBuilder sb = new StringBuilder()
-                .append(new Heading("Card: " + card.name, 1))
-                .append("\n<br>\n")
-                .append("Last activity: " +  Utils.dateToString(card.dateLastActivity))
-                .append("\n<br>\n")
-//                .append("Due activity: " +  Utils.dateToString(card.due))
-                .append("\n<br>\n");
+                .append(new Heading("Card: " + card.name, 1)).append("\n")
+                .append("<br>").append("\n")
+                .append("Last activity: ").append(Utils.dateToString(card.dateLastActivity)).append("\n")
+                .append("<br>").append("\n");
+        if (card.due != null) {
+            sb.append("Due activity: " + Utils.dateToString(card.due)).append("\n")
+                    .append("<br>").append("\n");
+        }
 
         if (!Strings.isBlank(card.desc)) {
-            sb.append("Description:")
-                    .append("\n<br>\n")
-                    .append(card.desc)
-                    .append("\n<br>\n");
+            sb.append("Description:").append("\n")
+                    .append("<br>").append("\n")
+                    .append(card.desc).append("\n")
+                    .append("<br>").append("\n");
         }
 
         writer.write(sb.toString());
@@ -77,21 +79,21 @@ public class CardExporter {
 
     private void generateHeader(BufferedWriter writer, Board board) throws IOException {
         StringBuilder sb = new StringBuilder()
-                .append(new Link("Back to boards", "../../Boards.md"))
-                .append("\n<br>\n")
-                .append(new Link("Back to board " + board.name, "../Board.md"))
-                .append("\n<br>\n")
-                .append("Export date: " +  Utils.dateToString(properties.exportDate))
-                .append("\n<br>\n")
-                .append(new HorizontalRule())
-                .append("\n<br>\n");
+                .append("Export date: " + Utils.dateToString(properties.exportDate)).append("\n")
+                .append("<br>").append("\n")
+                .append(new Link("Back to boards", "../../Boards.md")).append("\n")
+                .append("<br>").append("\n")
+                .append(new Link("Back to board " + board.name, "../Board.md")).append("\n")
+                .append("<br>").append("\n")
+                .append(new HorizontalRule()).append("\n")
+                .append("<br>").append("\n");
 
         writer.write(sb.toString());
         writer.newLine();
     }
 
     private void saveToJson(Board board, String cardId, String cardJson) {
-//        String json = trelloApi.getBoardJson(board.id);
+//IZEIZE        String json = trelloApi.getBoardJson(board.id);
         Utils.saveToFile(Paths.get(properties.baseDir, board.id, cardId, properties.getCardJson()), cardJson);
     }
 }

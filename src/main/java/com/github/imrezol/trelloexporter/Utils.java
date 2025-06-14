@@ -15,9 +15,6 @@ public class Utils {
     public static final DateTimeFormatter formatter =  DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public static String dateToString(ZonedDateTime dateTime){
-        if (dateTime == null) {
-            return "";
-        }
         return formatter.format(dateTime);
     }
 
