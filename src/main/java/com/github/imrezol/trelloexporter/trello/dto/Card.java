@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.Date;
+
 public class Card {
 
     @JsonProperty("id")
@@ -19,9 +23,12 @@ public class Card {
     public String desc;
 
     @JsonProperty("closed")
-    public boolean closed;
+    public Boolean closed;
 
-    public String dateLastActivity;
+    public ZonedDateTime dateLastActivity;
+    public ZonedDateTime due;
+    public Boolean dueComplete;
+    public String[] idChecklists;
 
     public static Card fromJson(String jsonString) {
 

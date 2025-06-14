@@ -4,10 +4,11 @@ import com.github.imrezol.trelloexporter.Properties;
 import com.github.imrezol.trelloexporter.Utils;
 import com.github.imrezol.trelloexporter.trello.dto.Board;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
-import com.github.imrezol.trelloexporter.trello.dto.CardDetails;
 import com.github.imrezol.trelloexporter.trello.service.TrelloApi;
 import net.steppschuh.markdowngenerator.link.Link;
+import net.steppschuh.markdowngenerator.rule.HorizontalRule;
 import net.steppschuh.markdowngenerator.text.heading.Heading;
+import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,17 +46,48 @@ public class CardExporter {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName.toString(), true))) {
 
-            StringBuilder sb = new StringBuilder()
-                    .append(new Heading("Card: " + card.name, 1)).append("\n")
-                    .append("Description: " + card.desc).append("\n")
-                    .append(new Link("<br>\nBack to boards","../../Boards.md")).append("\n");
+            generateHeader(writer, board);
+            generateCard(writer, card);
 
-            writer.write(sb.toString());
-            writer.newLine();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void generateCard(BufferedWriter writer, Card card) throws IOException {
+        StringBuilder sb = new StringBuilder()
+                .append(new Heading("Card: " + card.name, 1))
+                .append("\n<br>\n")
+                .append("Last activity: " +  Utils.dateToString(card.dateLastActivity))
+                .append("\n<br>\n")
+//                .append("Due activity: " +  Utils.dateToString(card.due))
+                .append("\n<br>\n");
+
+        if (!Strings.isBlank(card.desc)) {
+            sb.append("Description:")
+                    .append("\n<br>\n")
+                    .append(card.desc)
+                    .append("\n<br>\n");
+        }
+
+        writer.write(sb.toString());
+        writer.newLine();
+    }
+
+    private void generateHeader(BufferedWriter writer, Board board) throws IOException {
+        StringBuilder sb = new StringBuilder()
+                .append(new Link("Back to boards", "../../Boards.md"))
+                .append("\n<br>\n")
+                .append(new Link("Back to board " + board.name, "../Board.md"))
+                .append("\n<br>\n")
+                .append("Export date: " +  Utils.dateToString(properties.exportDate))
+                .append("\n<br>\n")
+                .append(new HorizontalRule())
+                .append("\n<br>\n");
+
+        writer.write(sb.toString());
+        writer.newLine();
     }
 
     private void saveToJson(Board board, String cardId, String cardJson) {

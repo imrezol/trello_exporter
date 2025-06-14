@@ -8,5 +8,6 @@ https://trello.com/app-key
 * exported date time in footer or header
 * attachments (locale file system?)
 * labels
+* handling properly the time zones?
 
 https://github.com/vsch/flexmark-java

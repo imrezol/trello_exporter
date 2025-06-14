@@ -2,7 +2,6 @@ package com.github.imrezol.trelloexporter.trello.service;
 
 import com.github.imrezol.trelloexporter.trello.dto.Board;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
-import com.github.imrezol.trelloexporter.trello.dto.CardDetails;
 import com.github.imrezol.trelloexporter.trello.dto.TrelloList;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;

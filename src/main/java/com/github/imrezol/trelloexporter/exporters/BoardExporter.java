@@ -42,6 +42,10 @@ public class BoardExporter {
 
         logger.info("Exporting board:{}", board.name);
 
+        if (!"Test".equals(board.name)) {
+            return;
+        }
+
         saveToJson(board);
 
         List<TrelloList> trelloLists = trelloApi.getLists(board.id)

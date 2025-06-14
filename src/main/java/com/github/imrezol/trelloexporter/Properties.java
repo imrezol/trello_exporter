@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
@@ -12,17 +13,19 @@ public class Properties {
     @Value("${trello.skipArchives: true}")
     public boolean skipArchives;
 
+    public ZonedDateTime exportDate = ZonedDateTime.now();
+
     public final String baseDir = generateBaseDir();
+
 
     private final String boardsFilename = "Boards";
     private final String boardFilename = "Board";
     private final String cardFilename = "Card";
 
     private String generateBaseDir() {
-
         DateTimeFormatter formatter =  DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
 
-        return String.format("exports/%s", formatter.format(LocalDateTime.now()));
+        return String.format("exports/%s", formatter.format(exportDate));
     }
 
     public String getBoardsMd() {
