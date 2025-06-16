@@ -13,8 +13,9 @@ public class Card {
     @JsonProperty("id")
     public String id;
 
-    @JsonProperty("address")
-    public String address;
+    public String idBoard;
+
+    public Badges badges;
 
     @JsonProperty("name")
     public String name;
@@ -27,16 +28,7 @@ public class Card {
 
     public ZonedDateTime dateLastActivity;
     public ZonedDateTime due;
-    public Boolean dueComplete;
+//    public Boolean dueComplete;
     public String[] idChecklists;
 
-    public static Card fromJson(String jsonString) {
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(jsonString, Card.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

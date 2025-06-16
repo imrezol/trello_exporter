@@ -3,7 +3,6 @@ package com.github.imrezol.trelloexporter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -21,6 +20,7 @@ public class Properties {
     private final String boardsFilename = "Boards";
     private final String boardFilename = "Board";
     private final String cardFilename = "Card";
+    private final String checklistsFilename = "Checklists";
 
     private String generateBaseDir() {
         DateTimeFormatter formatter =  DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
@@ -48,4 +48,7 @@ public class Properties {
         return cardFilename + ".json";
     }
 
+    public String getChecklistsJson() {
+        return checklistsFilename + ".json";
+    }
 }

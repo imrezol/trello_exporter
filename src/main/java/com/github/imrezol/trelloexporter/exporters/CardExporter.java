@@ -32,6 +32,9 @@ public class CardExporter {
     @Autowired
     private TrelloApi trelloApi;
 
+    @Autowired
+    private ChecklistExporter checklistExporter;
+
     public void export(Board board, Card card) {
         logger.info("Exporting Card:{}", card.name);
 
@@ -49,7 +52,6 @@ public class CardExporter {
             generateHeader(writer, board);
             generateCard(writer, card);
 
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -57,25 +59,24 @@ public class CardExporter {
 
     private void generateCard(BufferedWriter writer, Card card) throws IOException {
         StringBuilder sb = new StringBuilder()
-                .append(new Heading("Card: " + card.name, 1)).append("\n")
-                .append("<br>").append("\n")
-                .append("Last activity: ").append(Utils.dateToString(card.dateLastActivity)).append("\n")
-                .append("<br>").append("\n");
+                .append(new Heading(card.name, 2)).append("\n")
+                .append("Last activity: ").append(Utils.dateToString(card.dateLastActivity)).append("\n");
+
         if (card.due != null) {
-            sb.append("Due activity: " + Utils.dateToString(card.due)).append("\n")
-                    .append("<br>").append("\n");
+            sb.append("<br>").append("\n")
+                    .append("Due: " + Utils.dateToString(card.due)).append("\n");
         }
 
         if (!Strings.isBlank(card.desc)) {
-            sb.append("Description:").append("\n")
-                    .append("<br>").append("\n")
-                    .append(card.desc).append("\n")
-                    .append("<br>").append("\n");
+            sb.append(new Heading("Description:", 3)).append("\n")
+                    .append(card.desc).append("\n");
         }
 
         writer.write(sb.toString());
-        writer.newLine();
+
+        checklistExporter.export(writer, card);
     }
+
 
     private void generateHeader(BufferedWriter writer, Board board) throws IOException {
         StringBuilder sb = new StringBuilder()
@@ -83,17 +84,13 @@ public class CardExporter {
                 .append("<br>").append("\n")
                 .append(new Link("Back to boards", "../../Boards.md")).append("\n")
                 .append("<br>").append("\n")
-                .append(new Link("Back to board " + board.name, "../Board.md")).append("\n")
-                .append("<br>").append("\n")
-                .append(new HorizontalRule()).append("\n")
-                .append("<br>").append("\n");
+                .append(new Link("Back to board " + board.name, "../Board.md")).append("\n");
 
         writer.write(sb.toString());
         writer.newLine();
     }
 
     private void saveToJson(Board board, String cardId, String cardJson) {
-//IZEIZE        String json = trelloApi.getBoardJson(board.id);
         Utils.saveToFile(Paths.get(properties.baseDir, board.id, cardId, properties.getCardJson()), cardJson);
     }
 }

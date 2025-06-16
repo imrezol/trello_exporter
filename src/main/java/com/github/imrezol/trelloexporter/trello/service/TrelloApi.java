@@ -4,7 +4,7 @@ import com.github.imrezol.trelloexporter.trello.dto.Board;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
 import com.github.imrezol.trelloexporter.trello.dto.TrelloList;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,16 +19,8 @@ import java.util.List;
 @Service
 public class TrelloApi {
 
-
-    private static final String SCHEME = "https";
-    public static final String API_URL = "api.trello.com";
-
-
-    @Value("${trello.apikey}")
-    private String apiKey;
-
-    @Value("${trello.token}")
-    private String token;
+    @Autowired
+    private ApiProperties apiProperties;
 
     private HttpHeaders headers;
 
@@ -94,6 +86,14 @@ public class TrelloApi {
         return response.getBody();
     }
 
+    public String getChecklists(String cardId) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url = generateUrl(String.format("1/cards/%s/checklists",cardId));
+
+        return restTemplate.getForObject(url, String.class);
+    }
+
     public String getCard(String cardId) {
         RestTemplate restTemplate = new RestTemplate();
 
@@ -103,16 +103,19 @@ public class TrelloApi {
 
     }
 
+
+
     private String generateUrl(String path){
         return UriComponentsBuilder.newInstance()
-                .scheme(SCHEME)
-                .host(API_URL)
+                .scheme(apiProperties.scheme)
+                .host(apiProperties.apiUrl)
                 .path(path)
-                .queryParam("key", apiKey)
-                .queryParam("token", token)
+                .queryParam("key", apiProperties.apiKey)
+                .queryParam("token", apiProperties.token)
                 .encode()
                 .toUriString();
     }
+
 
 
 }
