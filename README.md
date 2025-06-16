@@ -28,7 +28,7 @@ https://trello.com/app-key
     * Main content 
     * emoji TODO
     * inline attachment link TODO
-  * Checklists TODO
+  * Checklists
   * Attachments TODO
   * Labels TODO
   * Dates? TODO?
