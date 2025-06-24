@@ -7,7 +7,6 @@ import com.github.imrezol.trelloexporter.trello.dto.Board;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
 import com.github.imrezol.trelloexporter.trello.service.TrelloApi;
 import net.steppschuh.markdowngenerator.link.Link;
-import net.steppschuh.markdowngenerator.rule.HorizontalRule;
 import net.steppschuh.markdowngenerator.text.heading.Heading;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
@@ -77,8 +76,12 @@ public class CardExporter {
         Attachment[] attachments = fromJson(attachmentsJson);
 
         if (!Strings.isBlank(card.desc)) {
+            String fixedDesc = card.desc;
+            for (Attachment attachment : attachments) {
+                fixedDesc = fixedDesc.replace(attachment.url, Utils.getUrl(attachment.fileName,properties.attachmentsDir, attachment.id));
+            }
             sb.append(new Heading("Description:", 3)).append("\n")
-                    .append(card.desc).append("\n");
+                    .append(fixedDesc).append("\n");
         }
 
         writer.write(sb.toString());

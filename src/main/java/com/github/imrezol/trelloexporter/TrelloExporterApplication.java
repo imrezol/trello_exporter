@@ -13,7 +13,6 @@ public class TrelloExporterApplication
 	@Autowired
 	private BoardsExporter boards;
 
-
 	public static void main(String[] args) {
 		SpringApplication.run(TrelloExporterApplication.class, args);
 	}
@@ -23,6 +22,6 @@ public class TrelloExporterApplication
 
 		boards.export();
 
-	}
+    }
 
 }

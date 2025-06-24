@@ -6,11 +6,15 @@ import com.github.imrezol.trelloexporter.Properties;
 import com.github.imrezol.trelloexporter.Utils;
 import com.github.imrezol.trelloexporter.trello.dto.Attachment;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
+import com.github.imrezol.trelloexporter.trello.service.ApiProperties;
 import com.github.imrezol.trelloexporter.trello.service.TrelloApi;
 import net.steppschuh.markdowngenerator.link.Link;
 import net.steppschuh.markdowngenerator.table.Table;
 import net.steppschuh.markdowngenerator.text.heading.Heading;
+import okhttp3.OkHttpClient;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,22 +26,29 @@ import java.nio.file.Paths;
 @Service
 public class AttachmentExporter {
 
+    private static final Logger logger = LoggerFactory.getLogger(AttachmentExporter.class);
+
     @Autowired
     private Properties properties;
 
     @Autowired
     private TrelloApi trelloApi;
 
+    @Autowired
+    private ApiProperties apiProperties;
+
+    private static final OkHttpClient client = new OkHttpClient();
+
     public void export(BufferedWriter writer, Card card, String attachmentsJson, Attachment[] attachments) throws IOException {
         if (card.badges.attachments==0) {
             return;
         }
 
-        String attachmentsDir = Paths.get(properties.baseDir, card.idBoard, card.id, "Attachments").toString();
+        String attachmentsDir = Paths.get(properties.baseDir, card.idBoard, card.id, properties.attachmentsDir).toString();
         Utils.ensureDirectory(attachmentsDir);
-        Path fileName = Paths.get(properties.baseDir, card.idBoard, card.id, properties.getAttachmentsJson());
+        Path jsonFileName = Paths.get(properties.baseDir, card.idBoard, card.id, properties.getAttachmentsJson());
 
-        Utils.saveToFile(fileName, attachmentsJson);
+        Utils.saveToFile(jsonFileName, attachmentsJson);
 
 
         StringBuilder sb = new StringBuilder()
@@ -52,13 +63,22 @@ public class AttachmentExporter {
                 .addRow("Name", "Filename","Date", "Size");
 
         for (Attachment attachment : attachments) {
-            tableBuilder.addRow(new Link(attachment.name, attachment.url), attachment.fileName, Utils.dateToString(attachment.date), FileUtils.byteCountToDisplaySize(attachment.bytes));
+            tableBuilder.addRow(new Link(attachment.name, Utils.getUrl(attachment.fileName, properties.attachmentsDir, attachment.id)), attachment.fileName, Utils.dateToString(attachment.date), FileUtils.byteCountToDisplaySize(attachment.bytes));
+
+            logger.info("Downloading attachment:{}", attachment.fileName);
+
+            String dir = Utils.getUrl(attachment.id, properties.baseDir, card.idBoard, card.id, properties.attachmentsDir);
+            Utils.ensureDirectory(dir);
+            String newFileName = Utils.getUrl(attachment.fileName, dir);
+
+            trelloApi.downloadAttachment(card,attachment, newFileName);
         }
 
         writer.write(tableBuilder.build().toString());
         writer.newLine();
 
     }
+
 
     public static Attachment[] fromJson(String jsonString) {
 

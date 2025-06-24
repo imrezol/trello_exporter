@@ -1,9 +1,13 @@
 package com.github.imrezol.trelloexporter.trello.service;
 
+import com.github.imrezol.trelloexporter.trello.dto.Attachment;
 import com.github.imrezol.trelloexporter.trello.dto.Board;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
 import com.github.imrezol.trelloexporter.trello.dto.TrelloList;
 import jakarta.annotation.PostConstruct;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -14,6 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @Service
@@ -23,6 +30,9 @@ public class TrelloApi {
     private ApiProperties apiProperties;
 
     private HttpHeaders headers;
+
+    private final OkHttpClient client = new OkHttpClient.Builder()
+            .build();
 
     @PostConstruct
     public void init()  {
@@ -109,6 +119,34 @@ public class TrelloApi {
         String url = generateUrl(String.format("1/cards/%s/attachments",cardId));
 
         return restTemplate.getForObject(url, String.class);
+    }
+
+    public  void downloadAttachment(Card card, Attachment attachment, String fileName) throws IOException {
+
+        String downloadUrl = generateUrl(String.format("/1/cards/%s/attachments/%s/download/%s",
+                card.id, attachment.id, attachment.fileName));
+
+
+        Request request = new Request.Builder()
+                .header("Authorization",String.format(" OAuth oauth_consumer_key=\"%s\", oauth_token=\"%s\"", apiProperties.apiKey, apiProperties.token))
+                .url(downloadUrl).build();
+        try (Response response = client.newCall(request).execute()) {
+
+            if (!response.isSuccessful()) {
+                throw new IOException("Failed to download file: " + response);
+            }
+
+            try (InputStream in = response.body().byteStream();
+                 FileOutputStream out = new FileOutputStream(fileName)) {
+
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, bytesRead);
+                }
+            }
+
+        }
     }
 
     private String generateUrl(String path){

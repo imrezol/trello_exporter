@@ -27,9 +27,9 @@ https://trello.com/app-key
   * Description
     * Main content 
     * emoji TODO
-    * inline attachment link TODO
+    * inline attachment link
   * Checklists
-  * Attachments TODO
+  * Attachments
   * Labels TODO
   * Dates? TODO?
   * Comments TODO
@@ -44,7 +44,6 @@ https://trello.com/app-key
 * https://spring.io/projects/spring-boot
 * https://github.com/Steppschuh/Java-Markdown-Generator
 * https://square.github.io/okhttp/
-* https://github.com/vsch/flexmark-java
 
 
 ## Trello REST API
@@ -53,6 +52,13 @@ https://developer.atlassian.com/cloud/trello/rest/
 
 https://developer.atlassian.com/cloud/trello/rest/api-group-actions/#api-gro
 
-curl -H "Authorization: OAuth oauth_consumer_key=\"{{key}}\", oauth_token=\"{{token}}\"" https://api.trello.com/1/cards/5e839f3696a55979a932b3ad/attachments/5edfd184387b678655b58348/download/my_image.png
-
 https://stackoverflow.com/questions/77623166/zoneddatetime-cannot-be-parsed-from-json-but-parses-fine-with-the-formatter
+
+
+jpackage
+https://docs.oracle.com/en/java/javase/14/jpackage/packaging-overview.html#GUID-C1027043-587D-418D-8188-EF8F44A4C06A
+
+https://github.panteleyev.org/jpackage-maven-plugin/
+
+jpackage --win-console --module mymodule --module-path mymodule.jar --type app-image --name myapp
+

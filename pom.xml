@@ -19,7 +19,6 @@
 		<spring-shell.version>3.4.0</spring-shell.version>
 	</properties>
 
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
