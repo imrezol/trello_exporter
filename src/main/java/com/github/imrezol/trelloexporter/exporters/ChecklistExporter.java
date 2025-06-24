@@ -76,7 +76,7 @@ public class ChecklistExporter {
 
     private static Checklist[] fromJson(String jsonString) {
 
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = Utils.getObjectMapper();
         try {
             return objectMapper.readValue(jsonString, Checklist[].class);
         } catch (JsonProcessingException e) {

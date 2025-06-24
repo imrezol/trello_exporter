@@ -55,3 +55,4 @@ https://developer.atlassian.com/cloud/trello/rest/api-group-actions/#api-gro
 
 curl -H "Authorization: OAuth oauth_consumer_key=\"{{key}}\", oauth_token=\"{{token}}\"" https://api.trello.com/1/cards/5e839f3696a55979a932b3ad/attachments/5edfd184387b678655b58348/download/my_image.png
 
+https://stackoverflow.com/questions/77623166/zoneddatetime-cannot-be-parsed-from-json-but-parses-fine-with-the-formatter

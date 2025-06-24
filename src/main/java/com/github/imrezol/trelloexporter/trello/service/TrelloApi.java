@@ -86,14 +86,6 @@ public class TrelloApi {
         return response.getBody();
     }
 
-    public String getChecklists(String cardId) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        String url = generateUrl(String.format("1/cards/%s/checklists",cardId));
-
-        return restTemplate.getForObject(url, String.class);
-    }
-
     public String getCard(String cardId) {
         RestTemplate restTemplate = new RestTemplate();
 
@@ -103,7 +95,21 @@ public class TrelloApi {
 
     }
 
+    public String getChecklists(String cardId) {
+        RestTemplate restTemplate = new RestTemplate();
 
+        String url = generateUrl(String.format("1/cards/%s/checklists",cardId));
+
+        return restTemplate.getForObject(url, String.class);
+    }
+
+    public String getAttachments(String cardId) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url = generateUrl(String.format("1/cards/%s/attachments",cardId));
+
+        return restTemplate.getForObject(url, String.class);
+    }
 
     private String generateUrl(String path){
         return UriComponentsBuilder.newInstance()

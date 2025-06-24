@@ -3,6 +3,8 @@ package com.github.imrezol.trelloexporter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -13,6 +15,7 @@ public class Properties {
     public boolean skipArchives;
 
     public ZonedDateTime exportDate = ZonedDateTime.now();
+//    public ZonedDateTime exportDate = Instant.now().atZone(ZoneId.of("UTC"));
 
     public final String baseDir = generateBaseDir();
 
@@ -50,5 +53,9 @@ public class Properties {
 
     public String getChecklistsJson() {
         return checklistsFilename + ".json";
+    }
+
+    public String getAttachmentsJson() {
+        return "Attachments.json";
     }
 }

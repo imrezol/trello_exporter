@@ -1,12 +1,8 @@
 package com.github.imrezol.trelloexporter.trello.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.Date;
+
 
 public class Card {
 

@@ -2,6 +2,7 @@ package com.github.imrezol.trelloexporter.exporters;
 
 import com.github.imrezol.trelloexporter.Properties;
 import com.github.imrezol.trelloexporter.Utils;
+import com.github.imrezol.trelloexporter.trello.dto.Attachment;
 import com.github.imrezol.trelloexporter.trello.dto.Board;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
 import com.github.imrezol.trelloexporter.trello.service.TrelloApi;
@@ -20,6 +21,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static com.github.imrezol.trelloexporter.exporters.AttachmentExporter.fromJson;
+
 
 @Service
 public class CardExporter {
@@ -34,6 +37,9 @@ public class CardExporter {
 
     @Autowired
     private ChecklistExporter checklistExporter;
+
+    @Autowired
+    private AttachmentExporter attachmentExporter;
 
     public void export(Board board, Card card) {
         logger.info("Exporting Card:{}", card.name);
@@ -67,6 +73,9 @@ public class CardExporter {
                     .append("Due: " + Utils.dateToString(card.due)).append("\n");
         }
 
+        String attachmentsJson = trelloApi.getAttachments(card.id);
+        Attachment[] attachments = fromJson(attachmentsJson);
+
         if (!Strings.isBlank(card.desc)) {
             sb.append(new Heading("Description:", 3)).append("\n")
                     .append(card.desc).append("\n");
@@ -75,6 +84,8 @@ public class CardExporter {
         writer.write(sb.toString());
 
         checklistExporter.export(writer, card);
+
+        attachmentExporter.export(writer, card, attachmentsJson, attachments);
     }
 
 
