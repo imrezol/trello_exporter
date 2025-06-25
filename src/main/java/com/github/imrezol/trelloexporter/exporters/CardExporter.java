@@ -77,7 +77,7 @@ public class CardExporter {
 
         if (!Strings.isBlank(card.desc)) {
             sb.append(new Heading("Description:", 3)).append("\n")
-                    .append(attachmentExporter.fixAttachments(attachments, card.desc)).append("\n");
+                    .append(attachmentExporter.fixAttachments(attachments, Utils.emojisToUtf8(card.desc))).append("\n");
         }
 
         writer.write(sb.toString());

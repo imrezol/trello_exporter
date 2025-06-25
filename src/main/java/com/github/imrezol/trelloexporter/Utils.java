@@ -3,6 +3,7 @@ package com.github.imrezol.trelloexporter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.vdurmont.emoji.EmojiParser;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,5 +53,9 @@ public class Utils {
 
     public static String pad(int level, String string) {
         return String.format("%s%s", " ".repeat(2*level), string);
+    }
+
+    public static String emojisToUtf8(String str) {
+        return EmojiParser.parseToUnicode(str);
     }
 }

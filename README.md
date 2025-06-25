@@ -26,7 +26,7 @@ https://trello.com/app-key
   * Cover TODO
   * Description
     * Main content 
-    * emoji TODO
+    * emojis 
     * inline attachment link
   * Checklists
   * Attachments
