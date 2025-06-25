@@ -1,5 +1,6 @@
 package com.github.imrezol.trelloexporter.trello.service;
 
+import com.github.imrezol.trelloexporter.Utils;
 import com.github.imrezol.trelloexporter.trello.dto.Attachment;
 import com.github.imrezol.trelloexporter.trello.dto.Board;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
@@ -21,6 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.List;
 
 @Service
@@ -122,6 +124,8 @@ public class TrelloApi {
     }
 
     public  void downloadAttachment(Card card, Attachment attachment, String fileName) throws IOException {
+
+        Utils.ensureDirectory(Path.of(fileName).getParent().toString());
 
         String downloadUrl = generateUrl(String.format("/1/cards/%s/attachments/%s/download/%s",
                 card.id, attachment.id, attachment.fileName));

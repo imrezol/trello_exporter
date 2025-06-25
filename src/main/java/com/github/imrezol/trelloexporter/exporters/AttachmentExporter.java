@@ -63,13 +63,11 @@ public class AttachmentExporter {
                 .addRow("Name", "Filename","Date", "Size");
 
         for (Attachment attachment : attachments) {
-            tableBuilder.addRow(new Link(attachment.name, Utils.getUrl(attachment.fileName, properties.attachmentsDir, attachment.id)), attachment.fileName, Utils.dateToString(attachment.date), FileUtils.byteCountToDisplaySize(attachment.bytes));
+            tableBuilder.addRow(new Link(attachment.name, getAttachmentRelativeLocation(attachment)), attachment.fileName, Utils.dateToString(attachment.date), FileUtils.byteCountToDisplaySize(attachment.bytes));
 
             logger.info(Utils.pad(3,"Downloading attachment:{}"), attachment.fileName);
 
-            String dir = Utils.getUrl(attachment.id, properties.baseDir, card.idBoard, card.id, properties.attachmentsDir);
-            Utils.ensureDirectory(dir);
-            String newFileName = Utils.getUrl(attachment.fileName, dir);
+            String newFileName = Utils.getUrl(getAttachmentRelativeLocation(attachment), properties.baseDir, card.idBoard, card.id);
 
             trelloApi.downloadAttachment(card,attachment, newFileName);
         }
@@ -79,6 +77,17 @@ public class AttachmentExporter {
 
     }
 
+    public  String fixAttachments(Attachment[] attachments, String string) {
+        String fixedDesc = string;
+        for (Attachment attachment : attachments) {
+            fixedDesc = fixedDesc.replace(attachment.url, getAttachmentRelativeLocation(attachment));
+        }
+        return fixedDesc;
+    }
+
+    private  String getAttachmentRelativeLocation(Attachment attachment) {
+        return Utils.getUrl(attachment.fileName,properties.attachmentsDir, attachment.id);
+    }
 
     public static Attachment[] fromJson(String jsonString) {
 

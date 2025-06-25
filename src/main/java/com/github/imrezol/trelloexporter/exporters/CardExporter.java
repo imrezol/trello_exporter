@@ -76,12 +76,8 @@ public class CardExporter {
         Attachment[] attachments = fromJson(attachmentsJson);
 
         if (!Strings.isBlank(card.desc)) {
-            String fixedDesc = card.desc;
-            for (Attachment attachment : attachments) {
-                fixedDesc = fixedDesc.replace(attachment.url, Utils.getUrl(attachment.fileName,properties.attachmentsDir, attachment.id));
-            }
             sb.append(new Heading("Description:", 3)).append("\n")
-                    .append(fixedDesc).append("\n");
+                    .append(attachmentExporter.fixAttachments(attachments, card.desc)).append("\n");
         }
 
         writer.write(sb.toString());
