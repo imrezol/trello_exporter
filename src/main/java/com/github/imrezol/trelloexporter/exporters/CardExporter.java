@@ -94,7 +94,7 @@ public class CardExporter {
 
     private void generateHeader(BufferedWriter writer, Board board) throws IOException {
         StringBuilder sb = new StringBuilder()
-                .append("Export date: " + Utils.dateToString(properties.exportDate)).append("\n")
+                .append("Export date: " + Utils.dateToStringWithTimeZone(properties.exportDate)).append("\n")
                 .append("<br>").append("\n")
                 .append(new Link("Back to boards", "../../Boards.md")).append("\n")
                 .append("<br>").append("\n")

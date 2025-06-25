@@ -12,10 +12,12 @@ public class Properties {
     @Value("${trello.skipArchives: true}")
     public boolean skipArchives;
 
-    public ZonedDateTime exportDate = ZonedDateTime.now();
-//    public ZonedDateTime exportDate = Instant.now().atZone(ZoneId.of("UTC"));
+    public final ZonedDateTime exportDate = ZonedDateTime.now();
 
-    public final String baseDir = generateBaseDir();
+    public final String baseDir = String.format(
+            "exports/%s",
+            DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm"
+            ).format(exportDate));
 
 
     private final String boardsFilename = "Boards";
@@ -24,11 +26,6 @@ public class Properties {
     private final String checklistsFilename = "Checklists";
     public final String attachmentsDir = "Attachments";
 
-    private String generateBaseDir() {
-        DateTimeFormatter formatter =  DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
-
-        return String.format("exports/%s", formatter.format(exportDate));
-    }
 
     public String getBoardsMd() {
         return boardsFilename + ".md";

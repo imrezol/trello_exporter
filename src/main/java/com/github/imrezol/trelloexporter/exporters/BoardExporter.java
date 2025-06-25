@@ -125,7 +125,7 @@ public class BoardExporter {
 
     private String getHeader(Board board) {
         StringBuilder sb = new StringBuilder()
-                .append("Export date: ").append(Utils.dateToString(properties.exportDate)).append("\n")
+                .append("Export date: ").append(Utils.dateToStringWithTimeZone(properties.exportDate)).append("\n")
                 .append("<br>").append("\n")
                 .append(new Link("Back to boards","../Boards.md")).append("\n")
                 .append("<br>").append("\n")

@@ -43,7 +43,7 @@ public class BoardsExporter {
                 .toList();
 
         StringBuilder sb = new StringBuilder()
-                .append("Export date: ").append(Utils.dateToString(properties.exportDate)).append("\n")
+                .append("Export date: ").append(Utils.dateToStringWithTimeZone(properties.exportDate)).append("\n")
                 .append("<br>").append("\n")
                 .append(new Heading("Boards:", 1)).append("\n")
                 .append("<br>").append("\n");

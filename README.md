@@ -38,21 +38,10 @@ https://trello.com/app-key
 
 # TODO
 * check api key and token
-* time zones 
-
-## Used libs
-* https://spring.io/projects/spring-boot
-* https://github.com/Steppschuh/Java-Markdown-Generator
-* https://square.github.io/okhttp/
 
 
 ## Trello REST API
 https://developer.atlassian.com/cloud/trello/rest/
-
-
-https://developer.atlassian.com/cloud/trello/rest/api-group-actions/#api-gro
-
-https://stackoverflow.com/questions/77623166/zoneddatetime-cannot-be-parsed-from-json-but-parses-fine-with-the-formatter
 
 
 jpackage
