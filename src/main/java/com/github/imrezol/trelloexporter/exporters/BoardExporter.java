@@ -41,7 +41,7 @@ public class BoardExporter {
 
     public void export(Board board) {
 
-        logger.info("Exporting board:{}", board.name);
+        logger.info(Utils.pad(1,"Exporting board:{}"), board.name);
 
         if (!"Test".equals(board.name)) {
             return;

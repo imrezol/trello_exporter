@@ -65,7 +65,7 @@ public class AttachmentExporter {
         for (Attachment attachment : attachments) {
             tableBuilder.addRow(new Link(attachment.name, Utils.getUrl(attachment.fileName, properties.attachmentsDir, attachment.id)), attachment.fileName, Utils.dateToString(attachment.date), FileUtils.byteCountToDisplaySize(attachment.bytes));
 
-            logger.info("Downloading attachment:{}", attachment.fileName);
+            logger.info(Utils.pad(3,"Downloading attachment:{}"), attachment.fileName);
 
             String dir = Utils.getUrl(attachment.id, properties.baseDir, card.idBoard, card.id, properties.attachmentsDir);
             Utils.ensureDirectory(dir);

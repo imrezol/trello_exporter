@@ -41,7 +41,7 @@ public class CardExporter {
     private AttachmentExporter attachmentExporter;
 
     public void export(Board board, Card card) {
-        logger.info("Exporting Card:{}", card.name);
+        logger.info(Utils.pad(2,"Exporting Card:{}"), card.name);
 
         String cardJson = trelloApi.getCard(card.id);
         saveToJson(board, card.id, cardJson);

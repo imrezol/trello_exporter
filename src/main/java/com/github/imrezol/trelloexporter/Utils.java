@@ -49,4 +49,8 @@ public class Utils {
             throw new RuntimeException(e);
         }
     }
+
+    public static String pad(int level, String string) {
+        return String.format("%s%s", " ".repeat(2*level), string);
+    }
 }
