@@ -36,10 +36,6 @@ https://trello.com/app-key
   * Activities? TODO?
   * Assignee? TODO?
 
-# TODO
-* check api key and token
-
-
 ## Trello REST API
 https://developer.atlassian.com/cloud/trello/rest/
 
