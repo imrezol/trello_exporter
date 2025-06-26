@@ -25,8 +25,8 @@ jobs:
       - name: Get project version from Maven
         id: vars
         run: |
-          $version = & mvn help:evaluate -Dexpression=project.version -q -DforceStdout
-          echo "version=$version"
+          $version = & mvn help:evaluate -Dexpression=project.version -q -DforceStdout | Select-String -NotMatch '^\['
+          echo "Extracted version: $version"
           "version=$version" >> $env:GITHUB_OUTPUT
         shell: pwsh
 
