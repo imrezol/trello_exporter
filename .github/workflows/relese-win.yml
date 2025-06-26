@@ -31,8 +31,8 @@ jobs:
         shell: pwsh
 
       - name: Setup tmate session
-          if: success() || failure()
-          uses: mxschmitt/action-tmate@v3
+        if: success() || failure()
+        uses: mxschmitt/action-tmate@v3
 
       - name: Show extracted version
         run: echo "Project version is ${{ steps.vars.outputs.version }}"
