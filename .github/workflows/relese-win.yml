@@ -25,17 +25,17 @@ jobs:
       - name: Get project version from Maven
         id: vars
         run: |
-          $version = & ./mvnw -q -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive exec:exec
+          $version = & ./mvnw -q -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive exec:exec | Select-String -NotMatch '^\['
           echo "Extracted version: $version"
           "version=$version" >> $env:GITHUB_OUTPUT
         shell: pwsh
 
-      - name: Setup tmate session
-        if: success() || failure()
-        uses: mxschmitt/action-tmate@v3
+#      - name: Setup tmate session
+#        if: success() || failure()
+#        uses: mxschmitt/action-tmate@v3
 
-      - name: Show extracted version
-        run: echo "Project version is ${{ steps.vars.outputs.version }}"
+#      - name: Show extracted version
+#        run: echo "Project version is ${{ steps.vars.outputs.version }}"
 
       - name: Create EXE with jpackage
         shell: cmd
@@ -44,12 +44,12 @@ jobs:
             --type exe ^
             --name TrelloExporter ^
             --input target ^
-            --main-jar trelloexporter-${{ steps.vars.outputs.version }}.jar ^
+            --main-jar trelloexporter-0.1.0.jar ^
             --main-class com.github.imrezol.trelloexporter.TrelloExporterApplication ^
             --dest dist ^
             --win-console ^
             --runtime-image "%JAVA_HOME%" ^
-            --app-version ${{ steps.vars.outputs.version }}
+            --app-version 1
 
       - name: List dist folder contents
         run: dir dist /s
@@ -59,4 +59,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: TrelloExporter-windows-exe
-          path: dist/TrelloExporter-${{ steps.vars.outputs.version }}.exe TrelloExporter.exe
+          path: dist/TrelloExporter-1.exe TrelloExporter.exe
