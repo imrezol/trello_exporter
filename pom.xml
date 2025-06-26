@@ -81,7 +81,7 @@
 
 	</dependencies>
 	<build>
-		<finalName>trelloexporter</finalName>
+<!--		<finalName>trelloexporter</finalName>-->
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
