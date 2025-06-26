@@ -1,0 +1,40 @@
+name: Package TrelloExporter for Windows
+
+on:
+  push:
+    branches: [ release ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 24
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 24
+
+      - name: Build fat JAR with Maven
+        run: mvn clean package
+
+      - name: Create EXE with jpackage
+        run: |
+          jpackage ^
+            --type exe ^
+            --name TrelloExporter ^
+            --input target ^
+            --main-jar trelloexporter-0.1.0.jar ^
+            --main-class com.github.imrezol.trelloexporter.TrelloExporterApplication ^
+            --dest dist ^
+            --win-console
+
+      - name: Upload .exe as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TrelloExporter-windows-exe
+          path: dist/TrelloExporter.exe

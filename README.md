@@ -47,3 +47,4 @@ https://github.panteleyev.org/jpackage-maven-plugin/
 
 jpackage --win-console --module mymodule --module-path mymodule.jar --type app-image --name myapp
 
+https://stateful.com/blog/trello-api-examples
