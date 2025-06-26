@@ -32,7 +32,8 @@ jobs:
             --main-jar trelloexporter-0.1.0.jar ^
             --main-class com.github.imrezol.trelloexporter.TrelloExporterApplication ^
             --dest dist ^
-            --win-console
+            --win-console ^
+            --runtime-image "%JAVA_HOME%"
 
       - name: Upload .exe as artifact
         uses: actions/upload-artifact@v4
