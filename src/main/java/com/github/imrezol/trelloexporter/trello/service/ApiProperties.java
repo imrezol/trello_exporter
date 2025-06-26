@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 
 @Component
@@ -22,11 +23,11 @@ public class ApiProperties {
     @Value("${trello.token}")
     public String token;
 
-    public  final String scheme = "https";
-    public  final String apiUrl = "api.trello.com";
+    public final String scheme = "https";
+    public final String apiUrl = "api.trello.com";
 
     @PostConstruct
-    public void init()  {
+    public void init() {
         List<String> errors = new ArrayList<>();
         if (Strings.isBlank(apiKey)) {
             errors.add("No TRELLO_API_KEY environment variable");
@@ -42,6 +43,12 @@ public class ApiProperties {
             }
             logger.error("To get API key and token visit this site: https://trello.com/app-key");
             logger.error("*******************************************");
+
+            logger.error("Press Enter to continue...");
+            logger.error("*******************************************");
+            Scanner scanner = new Scanner(System.in);
+            scanner.nextLine(); // Waits for the user to press Enter
+
             System.exit(1);
         }
     }
