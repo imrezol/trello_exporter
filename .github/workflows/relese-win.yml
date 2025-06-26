@@ -25,9 +25,13 @@ jobs:
       - name: Get project version from Maven
         id: vars
         run: |
-          $version = mvn help:evaluate -Dexpression=project.version -q -DforceStdout
-          echo "version=$version" >> $env:GITHUB_OUTPUT
+          $version = & mvn help:evaluate -Dexpression=project.version -q -DforceStdout
+          echo "version=$version"
+          "version=$version" >> $env:GITHUB_OUTPUT
         shell: pwsh
+
+      - name: Show extracted version
+        run: echo "Project version is ${{ steps.vars.outputs.version }}"
 
       - name: Create EXE with jpackage
         shell: cmd
