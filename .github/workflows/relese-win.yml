@@ -35,6 +35,10 @@ jobs:
             --win-console ^
             --runtime-image "%JAVA_HOME%"
 
+      - name: List dist folder contents
+        run: dir dist /s
+        shell: cmd
+
       - name: Upload .exe as artifact
         uses: actions/upload-artifact@v4
         with:
