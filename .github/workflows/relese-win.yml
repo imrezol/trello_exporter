@@ -29,11 +29,12 @@ jobs:
             --type exe ^
             --name TrelloExporter ^
             --input target ^
-            --main-jar trelloexporter-0.1.0.jar ^
+            --main-jar trelloexporter.jar ^
             --main-class com.github.imrezol.trelloexporter.TrelloExporterApplication ^
             --dest dist ^
             --win-console ^
-            --runtime-image "%JAVA_HOME%"
+            --runtime-image "%JAVA_HOME%" ^
+            --app-version 0
 
       - name: List dist folder contents
         run: dir dist /s
