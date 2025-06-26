@@ -49,7 +49,7 @@ jobs:
             --dest dist ^
             --win-console ^
             --runtime-image "%JAVA_HOME%" ^
-            --app-version 1
+            --app-version 1.0
 
       - name: List dist folder contents
         run: dir dist /s
@@ -59,4 +59,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: TrelloExporter-windows-exe
-          path: dist/TrelloExporter-1.exe TrelloExporter.exe
+          path: dist/TrelloExporter-1.0.exe TrelloExporter.exe
