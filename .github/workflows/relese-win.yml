@@ -23,6 +23,7 @@ jobs:
         run: mvn clean package
 
       - name: Create EXE with jpackage
+        shell: cmd
         run: |
           jpackage ^
             --type exe ^
