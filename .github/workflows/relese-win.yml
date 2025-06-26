@@ -22,13 +22,13 @@ jobs:
       - name: Build fat JAR with Maven
         run: ./mvnw clean package
 
-      - name: Get project version from Maven
-        id: vars
-        run: |
-          $version = & ./mvnw -q -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive exec:exec | Select-String -NotMatch '^\['
-          echo "Extracted version: $version"
-          "version=$version" >> $env:GITHUB_OUTPUT
-        shell: pwsh
+#      - name: Get project version from Maven
+#        id: vars
+#        run: |
+#          $version = & ./mvnw -q -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive exec:exec | Select-String -NotMatch '^\['
+#          echo "Extracted version: $version"
+#          "version=$version" >> $env:GITHUB_OUTPUT
+#        shell: pwsh
 
 #      - name: Setup tmate session
 #        if: success() || failure()
