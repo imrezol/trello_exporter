@@ -25,7 +25,7 @@ jobs:
       - name: Get project version from Maven
         id: vars
         run: |
-          $version = & ./mvnw -q -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive exec:exec | Select-String -NotMatch '^\['
+          $version = & ./mvnw -q -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive exec:exec
           echo "Extracted version: $version"
           "version=$version" >> $env:GITHUB_OUTPUT
         shell: pwsh
