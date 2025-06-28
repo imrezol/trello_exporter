@@ -2,10 +2,8 @@ package com.github.imrezol.trelloexporter.exporters;
 
 import com.github.imrezol.trelloexporter.Properties;
 import com.github.imrezol.trelloexporter.Utils;
-import com.github.imrezol.trelloexporter.trello.dto.Attachment;
-import com.github.imrezol.trelloexporter.trello.dto.Board;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
-import com.github.imrezol.trelloexporter.trello.service.TrelloApi;
+import com.github.imrezol.trelloexporter.trello.dto.Checklist;
 import net.steppschuh.markdowngenerator.link.Link;
 import net.steppschuh.markdowngenerator.text.heading.Heading;
 import org.apache.logging.log4j.util.Strings;
@@ -19,8 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import static com.github.imrezol.trelloexporter.exporters.AttachmentExporter.fromJson;
+import java.util.List;
 
 
 @Service
@@ -28,11 +25,6 @@ public class CardExporter {
 
     private static final Logger logger = LoggerFactory.getLogger(CardExporter.class);
 
-    @Autowired
-    private Properties properties;
-
-    @Autowired
-    private TrelloApi trelloApi;
 
     @Autowired
     private ChecklistExporter checklistExporter;
@@ -40,67 +32,67 @@ public class CardExporter {
     @Autowired
     private AttachmentExporter attachmentExporter;
 
-    public void export(Board board, Card card) {
-        logger.info(Utils.pad(2,"Exporting Card:{}"), card.name);
+    @Autowired
+    private ActionsExporter actionsExporter;
 
-        String cardJson = trelloApi.getCard(card.id);
-        saveToJson(board, card.id, cardJson);
-        generateMD(board, card);
-    }
 
-    private void generateMD(Board board, Card card) {
+    public void export(String boardName, Card card, List<Checklist> checklists) {
+        System.out.println(String.format(Utils.pad(2, "Exporting Card:%s"), card.name));
 
-        Path fileName = Paths.get(properties.baseDir, board.id, card.id, properties.getCardMd());
+        String cardDir = Utils.getUrl(card.id, Properties.baseDir, card.idBoard);
+        Utils.ensureDirectory(cardDir);
+
+        Path fileName = Paths.get(cardDir, Properties.getCardMd());
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName.toString(), true))) {
 
-            generateHeader(writer, board);
+            generateHeader(writer, boardName);
             generateCard(writer, card);
+            checklistExporter.export(writer, checklists);
+
+            attachmentExporter.export(writer, card);
+
+// IZEIZE            actionsExporter.export(writer, card);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     private void generateCard(BufferedWriter writer, Card card) throws IOException {
         StringBuilder sb = new StringBuilder()
-                .append(new Heading(card.name, 2)).append("\n")
-                .append("Last activity: ").append(Utils.dateToString(card.dateLastActivity)).append("\n");
+                .append(new Heading(card.name, 2)).append(System.lineSeparator())
+                .append("Last activity: ").append(Utils.dateToString(card.dateLastActivity)).append(System.lineSeparator());
 
         if (card.due != null) {
-            sb.append("<br>").append("\n")
-                    .append("Due: " + Utils.dateToString(card.due)).append("\n");
+            sb.append("<br>").append(System.lineSeparator())
+                    .append("Due: " + Utils.dateToString(card.due)).append(System.lineSeparator());
         }
 
-        String attachmentsJson = trelloApi.getAttachments(card.id);
-        Attachment[] attachments = fromJson(attachmentsJson);
 
         if (!Strings.isBlank(card.desc)) {
-            sb.append(new Heading("Description:", 3)).append("\n")
-                    .append(attachmentExporter.fixAttachments(attachments, Utils.emojisToUtf8(card.desc))).append("\n");
+            sb.append(new Heading("Description:", 3)).append(System.lineSeparator());
+
+            String fixedDesc = CardDescriptionFixer.fixMarkDown(card.desc);
+            fixedDesc = CardDescriptionFixer.fixAttachments(fixedDesc, card.attachments);
+            sb.append(fixedDesc).append(System.lineSeparator());
         }
 
         writer.write(sb.toString());
-
-        checklistExporter.export(writer, card);
-
-        attachmentExporter.export(writer, card, attachmentsJson, attachments);
     }
 
 
-    private void generateHeader(BufferedWriter writer, Board board) throws IOException {
+    private void generateHeader(BufferedWriter writer, String boardName) throws IOException {
         StringBuilder sb = new StringBuilder()
-                .append("Export date: " + Utils.dateToStringWithTimeZone(properties.exportDate)).append("\n")
-                .append("<br>").append("\n")
-                .append(new Link("Back to boards", "../../Boards.md")).append("\n")
-                .append("<br>").append("\n")
-                .append(new Link("Back to board " + board.name, "../Board.md")).append("\n");
+                .append("Export date: " + Utils.dateToStringWithTimeZone(Properties.exportDate)).append(System.lineSeparator())
+                .append("<br>").append(System.lineSeparator())
+                .append(new Link("Back to boards", "../../Boards.md")).append(System.lineSeparator())
+                .append("<br>").append(System.lineSeparator())
+                .append(new Link("Back to board " + boardName, "../Board.md")).append(System.lineSeparator());
 
         writer.write(sb.toString());
         writer.newLine();
     }
 
-    private void saveToJson(Board board, String cardId, String cardJson) {
-        Utils.saveToFile(Paths.get(properties.baseDir, board.id, cardId, properties.getCardJson()), cardJson);
-    }
 }

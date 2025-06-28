@@ -1,30 +1,61 @@
 package com.github.imrezol.trelloexporter.trello.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.ZonedDateTime;
-
+import java.util.List;
 
 public class Card {
-
-    @JsonProperty("id")
     public String id;
-
-    public String idBoard;
-
-    public Badges badges;
-
-    @JsonProperty("name")
-    public String name;
-
-    @JsonProperty("desc")
-    public String desc;
-
-    @JsonProperty("closed")
-    public Boolean closed;
-
+    public Object address;
+    public CardBadges badges;
+    public List<CheckItemState> checkItemStates;
+    public boolean closed;
+    public Object coordinates;
+    public Object creationMethod;
+    public Object creationMethodError;
+    public Object creationMethodLoadingStartedAt;
+    public boolean dueComplete;
+    public ZonedDateTime dateClosed;
     public ZonedDateTime dateLastActivity;
+    public ZonedDateTime dateCompleted;
+    public ZonedDateTime dateViewedByCreator;
+    public String desc;
+    public Object descData;
     public ZonedDateTime due;
-//    public Boolean dueComplete;
-    public String[] idChecklists;
-
+    public int dueReminder;
+    public String email;
+    public Object externalSource;
+    public String idBoard;
+    public List<String> idChecklists;
+    public List<String> idLabels;
+    public String idList;
+    public String idMemberCreator;
+    public List<String> idMembers;
+    public List<Object> idMembersVoted;
+    public String idOrganization;
+    public int idShort;
+    public String idAttachmentCover;
+    public List<Object> labels; // IZEIZE
+    public Object limits;
+    public Object locationName;
+    public boolean manualCoverAttachment;
+    public String name;
+    public String nodeId;
+    public boolean pinned;
+    public long pos;
+    public String shortLink;
+    public String shortUrl;
+    public Object singleInstrumentationId;
+    public Object sourceEmail;
+    public Object staticMapUrl;
+    public Object start;
+    public boolean subscribed;
+    public String url;
+    public CardCover cover;
+    public boolean isTemplate;
+    public Object cardRole;
+    public Object mirrorSourceId;
+    public Object mirrorSourceNodeId;
+    public List<CardAttachment> attachments;
+    public List<Object> pluginData;
+    public List<Object> customFieldItems;
 }

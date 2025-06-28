@@ -3,7 +3,6 @@ package com.github.imrezol.trelloexporter.exporters;
 import com.github.imrezol.trelloexporter.Properties;
 import com.github.imrezol.trelloexporter.Utils;
 import com.github.imrezol.trelloexporter.trello.dto.Board;
-import com.github.imrezol.trelloexporter.trello.service.TrelloApi;
 import net.steppschuh.markdowngenerator.link.Link;
 import net.steppschuh.markdowngenerator.table.Table;
 import net.steppschuh.markdowngenerator.text.heading.Heading;
@@ -25,48 +24,38 @@ public class BoardsExporter {
     private static final Logger logger = LoggerFactory.getLogger(BoardsExporter.class);
 
     @Autowired
-    private Properties properties;
-
-    @Autowired
-    private TrelloApi trelloApi;
-
-    @Autowired
     private BoardExporter boardExporter;
 
-    public void export(){
+    public void export(List<Board> boards) {
 
-        logger.info("Exporting boards ...");
-
-        List<Board> boards = trelloApi.getBoards()
-                .stream()
-                .filter(board -> !properties.skipArchives || !board.closed)
-                .toList();
+        System.out.println("Exporting boards ...");
 
         StringBuilder sb = new StringBuilder()
-                .append("Export date: ").append(Utils.dateToStringWithTimeZone(properties.exportDate)).append("\n")
-                .append("<br>").append("\n")
-                .append(new Heading("Boards:", 1)).append("\n")
-                .append("<br>").append("\n");
+                .append("Export date: ").append(Utils.dateToStringWithTimeZone(Properties.exportDate)).append(System.lineSeparator())
+                .append("<br>").append(System.lineSeparator())
+                .append(new Heading("Boards:", 1)).append(System.lineSeparator())
+                .append("<br>").append(System.lineSeparator());
 
 
         Table.Builder tableBuilder = new Table.Builder()
-                .withAlignments(Table.ALIGN_LEFT, Table.ALIGN_LEFT)
-                .addRow("Name", "Description");
+                .withAlignments(Table.ALIGN_LEFT, Table.ALIGN_LEFT, Table.ALIGN_LEFT)
+                .addRow("Name", "Description", "Last activity");
 
-        Utils.ensureDirectory(properties.baseDir);
-        Path fileName = Paths.get(properties.baseDir, properties.getBoardsMd());
+        Utils.ensureDirectory(Properties.baseDir);
+        Path fileName = Paths.get(Properties.baseDir, Properties.getBoardsMd());
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName.toString(), true))) {
             writer.write(sb.toString());
             writer.newLine();
 
-            boards.forEach(board -> {
-                String boardUrl = Utils.getUrl(properties.getBoardMd() , board.id);
-                Link link = new Link(board.name, boardUrl);
+            boards.stream()
+                    .filter(board -> !board.closed)
+                    .forEach(board -> {
+                        String boardUrl = Utils.getUrl(Properties.getBoardMd(), board.id);
+                        Link link = new Link(board.name, boardUrl);
 
-                tableBuilder.addRow(link, board.desc);
+                        tableBuilder.addRow(link, board.desc, Utils.dateToString(board.dateLastActivity));
 
-                boardExporter.export(board);
-            });
+                    });
 
             writer.write(tableBuilder.build().toString());
             writer.newLine();

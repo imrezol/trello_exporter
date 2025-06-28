@@ -1,20 +1,14 @@
 package com.github.imrezol.trelloexporter.trello.service;
 
 import com.github.imrezol.trelloexporter.Utils;
-import com.github.imrezol.trelloexporter.trello.dto.Attachment;
-import com.github.imrezol.trelloexporter.trello.dto.Board;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
-import com.github.imrezol.trelloexporter.trello.dto.TrelloList;
+import com.github.imrezol.trelloexporter.trello.dto.CardAttachment;
 import jakarta.annotation.PostConstruct;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -22,8 +16,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
-import java.util.List;
 
 @Service
 public class TrelloApi {
@@ -43,18 +35,12 @@ public class TrelloApi {
         headers.set("Authorization", "Bearer JWT TOKEN HERE");
     }
 
-    public List<Board> getBoards(){
+    public String getBoards(){
         RestTemplate restTemplate = new RestTemplate();
 
-        HttpEntity<Board> requestEntity = new HttpEntity<>(null, headers);
+        String url = generateUrl("1/members/me/boards");
 
-        ResponseEntity<List<Board>> response = restTemplate.exchange(generateUrl("1/members/me/boards"),
-                HttpMethod.GET,
-                requestEntity,
-                new ParameterizedTypeReference<>() {
-                });
-
-        return response.getBody();
+        return restTemplate.getForObject(url, String.class);
     }
 
     public String getBoardJson(String boardId){
@@ -64,38 +50,22 @@ public class TrelloApi {
         return restTemplate.getForObject(url, String.class);
     }
 
-    public List<TrelloList> getLists(String boardId){
+    public String getLists(String boardId){
         RestTemplate restTemplate = new RestTemplate();
 
         String url = generateUrl(String.format("1/boards/%s/lists",boardId));
 
 
-        HttpEntity<TrelloList> requestEntity = new HttpEntity<>(null, headers);
-
-        ResponseEntity<List<TrelloList>> response = restTemplate.exchange(url,
-                HttpMethod.GET,
-                requestEntity,
-                new ParameterizedTypeReference<>() {
-                });
-
-        return response.getBody();
+        return restTemplate.getForObject(url, String.class);
     }
 
 
-    public List<Card> getCards(String listId){
+    public String getCards(String listId){
         RestTemplate restTemplate = new RestTemplate();
 
         String url = generateUrl(String.format("1/lists/%s/cards",listId));
 
-        HttpEntity<Card> requestEntity = new HttpEntity<>(null, headers);
-
-        ResponseEntity<List<Card>> response = restTemplate.exchange(url,
-                HttpMethod.GET,
-                requestEntity,
-                new ParameterizedTypeReference<>() {
-                });
-
-        return response.getBody();
+        return restTemplate.getForObject(url, String.class);
     }
 
     public String getCard(String cardId) {
@@ -115,6 +85,16 @@ public class TrelloApi {
         return restTemplate.getForObject(url, String.class);
     }
 
+    public String getActions(String cardId) {
+        RestTemplate restTemplate = new RestTemplate();
+        // https://developer.atlassian.com/cloud/trello/guides/rest-api/api-introduction/#paging
+        // https://stackoverflow.com/questions/51777063/how-can-i-get-all-actions-for-a-board-using-trellos-rest-api
+//        String url = generateUrl(String.format("1/cards/%s/",cardId)) + "&actions=all";
+        String url = generateUrl(String.format("1/cards/%s/actions",cardId))+"&limit=1000";
+
+        return restTemplate.getForObject(url, String.class);
+    }
+
     public String getAttachments(String cardId) {
         RestTemplate restTemplate = new RestTemplate();
 
@@ -123,9 +103,12 @@ public class TrelloApi {
         return restTemplate.getForObject(url, String.class);
     }
 
-    public  void downloadAttachment(Card card, Attachment attachment, String fileName) throws IOException {
+    public  void downloadAttachment(Card card, CardAttachment attachment, String targetDir) {
 
-        Utils.ensureDirectory(Path.of(fileName).getParent().toString());
+        System.out.println(String.format("Downloading attachment:%s", attachment.fileName));
+
+        Utils.ensureDirectory(targetDir);
+        String fileName = Utils.getUrl(attachment.getLocalFilename(), targetDir);
 
         String downloadUrl = generateUrl(String.format("/1/cards/%s/attachments/%s/download/%s",
                 card.id, attachment.id, attachment.fileName));
@@ -137,7 +120,7 @@ public class TrelloApi {
         try (Response response = client.newCall(request).execute()) {
 
             if (!response.isSuccessful()) {
-                throw new IOException("Failed to download file: " + response);
+                throw new RuntimeException("Failed to download file: " + response);
             }
 
             try (InputStream in = response.body().byteStream();
@@ -148,8 +131,12 @@ public class TrelloApi {
                 while ((bytesRead = in.read(buffer)) != -1) {
                     out.write(buffer, 0, bytesRead);
                 }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
 
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

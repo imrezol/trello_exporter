@@ -1,5 +1,6 @@
 package com.github.imrezol.trelloexporter.trello.service;
 
+import com.github.imrezol.trelloexporter.Utils;
 import jakarta.annotation.PostConstruct;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
@@ -26,30 +27,32 @@ public class ApiProperties {
     public final String scheme = "https";
     public final String apiUrl = "api.trello.com";
 
+    public boolean isConfigured = true;
+
     @PostConstruct
     public void init() {
         List<String> errors = new ArrayList<>();
         if (Strings.isBlank(apiKey)) {
+            isConfigured = false;
             errors.add("No TRELLO_API_KEY environment variable");
         }
         if (Strings.isBlank(token)) {
+            isConfigured = false;
             errors.add("No TRELLO_TOKEN environment variable");
         }
 
         if (!errors.isEmpty()) {
-            logger.error("*******************************************");
+            System.out.println(Utils.lineSeparator);
             for (String error : errors) {
                 logger.error(error);
             }
-            logger.error("To get API key and token visit this site: https://trello.com/app-key");
-            logger.error("*******************************************");
+            System.out.println("To get API key and token visit this site: https://trello.com/app-key");
+            System.out.println(Utils.lineSeparator);
 
-            logger.error("Press Enter to continue...");
-            logger.error("*******************************************");
+            System.out.println("Press Enter to continue...");
+            System.out.println(Utils.lineSeparator);
             Scanner scanner = new Scanner(System.in);
-            scanner.nextLine(); // Waits for the user to press Enter
-
-            System.exit(1);
+            scanner.nextLine();
         }
     }
 }

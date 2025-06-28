@@ -1,13 +1,17 @@
 package com.github.imrezol.trelloexporter.trello.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.time.ZonedDateTime;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class CheckItem {
-
     public String id;
     public String name;
+    public Object nameData;
+    public long pos;
     public String state;
+    public ZonedDateTime due;
+    public Object dueReminder;
+    public String idMember;
+    public String idChecklist;
 
     public boolean isComplete(){
         return "complete".equals(state); // incomplete, complete

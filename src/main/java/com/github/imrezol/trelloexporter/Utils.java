@@ -18,6 +18,7 @@ public class Utils {
 
     public static final DateTimeFormatter formatter =  DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());
     public static final DateTimeFormatter formatterWithTimeZone =  DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss VV").withZone(ZoneId.systemDefault());
+    public static String lineSeparator = "*".repeat(20);
 
     public static ObjectMapper getObjectMapper(){
         ObjectMapper objectMapper = new ObjectMapper();
@@ -55,7 +56,4 @@ public class Utils {
         return String.format("%s%s", " ".repeat(2*level), string);
     }
 
-    public static String emojisToUtf8(String str) {
-        return EmojiParser.parseToUnicode(str);
-    }
 }

@@ -1,15 +1,16 @@
 package com.github.imrezol.trelloexporter.trello.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Checklist {
-
-    public  String id;
-    public  String name;
-    public  String idBoard;
-    public  String idCard;
-    public  CheckItem[] checkItems;
+    public String id;
+    public String name;
+    public String idBoard;
+    public String idCard;
+    public long pos;
+    public Object limits;
+    public List<CheckItem> checkItems;
+    public Object creationMethod;
 
     public int getCompletedCount() {
         int completed = 0;

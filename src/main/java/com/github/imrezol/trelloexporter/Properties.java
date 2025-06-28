@@ -6,52 +6,35 @@ import org.springframework.stereotype.Component;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Component
 public class Properties {
 
-    @Value("${trello.skipArchives: true}")
-    public boolean skipArchives;
+    private static final String boardsFilename = "Boards";
+    private static final String boardFilename = "Board";
+    private static final String cardFilename = "Card";
+    public static final String attachmentsDir = "Attachments";
 
-    public final ZonedDateTime exportDate = ZonedDateTime.now();
+    public static final ZonedDateTime exportDate = ZonedDateTime.now();
 
-    public final String baseDir = String.format(
+    public static final String baseDir = String.format(
             "exports/%s",
             DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm"
             ).format(exportDate));
 
 
-    private final String boardsFilename = "Boards";
-    private final String boardFilename = "Board";
-    private final String cardFilename = "Card";
-    private final String checklistsFilename = "Checklists";
-    public final String attachmentsDir = "Attachments";
-
-
-    public String getBoardsMd() {
+    public static String getBoardsMd() {
         return boardsFilename + ".md";
     }
 
-    public String getBoardMd() {
+    public static String getBoardMd() {
         return boardFilename + ".md";
     }
 
-    public String getBoardJson() {
+    public static String getBoardJson() {
         return boardFilename + ".json";
     }
 
-    public String getCardMd() {
+    public static String getCardMd() {
         return cardFilename + ".md";
     }
 
-    public String getCardJson() {
-        return cardFilename + ".json";
-    }
-
-    public String getChecklistsJson() {
-        return checklistsFilename + ".json";
-    }
-
-    public String getAttachmentsJson() {
-        return "Attachments.json";
-    }
 }

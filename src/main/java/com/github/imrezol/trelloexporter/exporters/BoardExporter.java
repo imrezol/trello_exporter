@@ -5,14 +5,12 @@ import com.github.imrezol.trelloexporter.Utils;
 import com.github.imrezol.trelloexporter.trello.dto.Board;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
 import com.github.imrezol.trelloexporter.trello.dto.TrelloList;
-import com.github.imrezol.trelloexporter.trello.service.TrelloApi;
 import net.steppschuh.markdowngenerator.link.Link;
 import net.steppschuh.markdowngenerator.table.Table;
 import net.steppschuh.markdowngenerator.text.heading.Heading;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedWriter;
@@ -30,36 +28,21 @@ public class BoardExporter {
 
     private static final Logger logger = LoggerFactory.getLogger(BoardExporter.class);
 
-    @Autowired
-    private TrelloApi trelloApi;
-
-    @Autowired
-    private Properties properties;
-
-    @Autowired
-    private CardExporter cardExporter;
 
     public void export(Board board) {
 
-        logger.info(Utils.pad(1,"Exporting board:{}"), board.name);
+        System.out.println(String.format(Utils.pad(1,"Exporting board:%s"), board.name));
 
-        if (!"Test".equals(board.name)) {
-            return;
-        }
+        String mdDir = Utils.getUrl(board.id, Properties.baseDir);
+        Utils.ensureDirectory(mdDir);
 
-        saveToJson(board);
-
-        List<TrelloList> trelloLists = trelloApi.getLists(board.id)
-                .stream()
-                .filter(trelloList -> !trelloList.closed).toList();
-
-        Path fileName = Paths.get(properties.baseDir, board.id, properties.getBoardMd());
+        Path fileName = Paths.get( mdDir, Properties.getBoardMd());
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName.toString(), true))) {
             writer.write(getHeader(board));
             writer.newLine();
 
-            writer.write(generateLists(board, trelloLists));
+            writer.write(generateLists(board));
             writer.newLine();
 
         } catch (IOException e) {
@@ -67,29 +50,25 @@ public class BoardExporter {
         }
     }
 
-    private void saveToJson(Board board) {
-        String json = trelloApi.getBoardJson(board.id);
-        Utils.saveToFile(Paths.get(properties.baseDir, board.id, properties.getBoardJson()), json);
-    }
 
 
-    private String generateLists(Board board, List<TrelloList> trelloLists){
+    private String generateLists(Board board){
 
         Map<String, List<Card>> cardsByList = new HashMap<>();
-        for (TrelloList list : trelloLists) {
-            String listId = list.id;
-            List<Card> cards = trelloApi.getCards(listId);
-            cardsByList.put(listId, cards);
+
+        for (TrelloList list : board.lists) {
+            cardsByList.put(list.id, new ArrayList<>());
         }
 
-        trelloLists.forEach(trelloList -> {
-            List<Card> cards = trelloApi.getCards(trelloList.id);
-            cardsByList.put(trelloList.id, cards);
-        });
+        for (Card card: board.cards) {
+            List<Card> cards = cardsByList.get(card.idList);
+            if (cards != null) {
+                cards.add(card);
+            }
+        }
 
         Table.Builder tableBuilder = new Table.Builder()
-//                .withAlignments(Table.ALIGN_LEFT, Table.ALIGN_LEFT)
-                .addRow(trelloLists.stream().map(trelloList -> trelloList.name).toArray());
+                .addRow(board.lists.stream().map(trelloList -> trelloList.name ).toArray());
 
         int rowIndex = 0;
         while (true) {
@@ -97,14 +76,16 @@ public class BoardExporter {
 
             List<Object> cells = new ArrayList<>();
             boolean wasCard = false;
-            for (TrelloList trelloList : trelloLists) {
+            for (TrelloList trelloList : board.lists) {
 
-                List<Card> cards = cardsByList.get(trelloList.id);
+                List<Card> cards = cardsByList.get(trelloList.id).stream()
+                        .filter(card -> !card.closed)
+                        .sorted((c1, c2) -> c1.pos>c2.pos?1:0)
+                        .toList();
                 if (cards.size()>rowIndex) {
                     wasCard = true;
                     Card card = cards.get(rowIndex);
-                    cells.add( new Link(card.name, Utils.getUrl(properties.getCardMd(), card.id))) ;
-                    cardExporter.export(board, card);
+                    cells.add( new Link(card.name, Utils.getUrl(Properties.getCardMd(), card.id))) ;
                 } else {
                     cells.add(null);
                 }
@@ -125,13 +106,13 @@ public class BoardExporter {
 
     private String getHeader(Board board) {
         StringBuilder sb = new StringBuilder()
-                .append("Export date: ").append(Utils.dateToStringWithTimeZone(properties.exportDate)).append("\n")
-                .append("<br>").append("\n")
-                .append(new Link("Back to boards","../Boards.md")).append("\n")
-                .append("<br>").append("\n")
-                .append(new Heading("Board: " + board.name, 1)).append("\n");
+                .append("Export date: ").append(Utils.dateToStringWithTimeZone(Properties.exportDate)).append(System.lineSeparator())
+                .append("<br>").append(System.lineSeparator())
+                .append(new Link("Back to boards","../Boards.md")).append(System.lineSeparator())
+                .append("<br>").append(System.lineSeparator())
+                .append(new Heading("Board: " + board.name, 1)).append(System.lineSeparator());
                 if (!Strings.isBlank(board.desc)) {
-                    sb.append("Description: " + board.desc).append("\n");
+                    sb.append("Description: " + board.desc).append(System.lineSeparator());
                 }
 
         return sb.toString();
