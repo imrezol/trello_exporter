@@ -23,7 +23,7 @@ public class CommentsExporter {
         StringBuilder sb = new StringBuilder()
                 .append(System.lineSeparator())
                 .append(new Heading(String.format("Comments (%d):", card.badges.comments), 3)).append(System.lineSeparator())
-                .append(new HorizontalRule()).append(System.lineSeparator());
+                .append(System.lineSeparator()).append(new HorizontalRule()).append(System.lineSeparator());
 
 
 
