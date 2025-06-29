@@ -32,14 +32,6 @@ public class TrelloExporterApplication
     @Autowired
     private TrelloApi trelloApi;
 
-    @Autowired
-    private BoardsExporter boardsExporter;
-
-    @Autowired
-    private BoardExporter boardExporter;
-
-    @Autowired
-    private CardExporter cardExporter;
 
     public List<String> jsonFilenames = new ArrayList<>();
 
@@ -124,16 +116,16 @@ public class TrelloExporterApplication
     }
 
     private void generateMdFiles(List<Board> boards) {
-        boardsExporter.export(boards);
+        BoardsExporter.export(boards);
 
         for (Board board : boards) {
-            boardExporter.export(board);
+            BoardExporter.export(board);
 
             Map<String, List<Checklist>> checklistsByCardId = getChecklistsByCardId(board);
             Map<String, List<Action>> actionsByCardId = getActionsByCardId(board);
             Map<String, TrelloList> listsById = getlistsById(board);
             for (Card card : board.cards) {
-                cardExporter.export(board.name, card, checklistsByCardId.get(card.id), listsById.get(card.idList).name, actionsByCardId.get(card.id) == null ? Collections.emptyList() : actionsByCardId.get(card.id));
+                CardExporter.export(board.name, card, checklistsByCardId.get(card.id), listsById.get(card.idList).name, actionsByCardId.get(card.id) == null ? Collections.emptyList() : actionsByCardId.get(card.id));
             }
         }
 

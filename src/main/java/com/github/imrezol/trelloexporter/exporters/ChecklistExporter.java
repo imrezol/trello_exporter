@@ -10,21 +10,20 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.List;
 
-@Service
 public class ChecklistExporter {
 
 
-    public void export(BufferedWriter writer, List<Checklist> checklists) throws IOException {
+    public static void export(BufferedWriter writer, List<Checklist> checklists) throws IOException {
         if (checklists == null || checklists.isEmpty()) {
             return;
         }
 
 
-//        StringBuilder sb = new StringBuilder()
-//                .append(new Heading(String.format("Checklists (%d):", checklists.size()), 3)).append(System.lineSeparator());
-//
-//
-//        writer.write(sb.toString());
+        StringBuilder sb = new StringBuilder()
+                .append(new Heading(String.format("Checklists (%d):", checklists.size()), 3)).append(System.lineSeparator());
+
+
+        writer.write(sb.toString());
 
         for (Checklist checklist : checklists) {
             generateChecklist(writer, checklist);
@@ -32,7 +31,7 @@ public class ChecklistExporter {
 
     }
 
-    private void generateChecklist(BufferedWriter writer, Checklist checklist) throws IOException {
+    private static void generateChecklist(BufferedWriter writer, Checklist checklist) throws IOException {
         StringBuilder sb = new StringBuilder()
                 .append(System.lineSeparator())
                 .append(new Heading(String.format("%s (%d/%d)", checklist.name, checklist.getCompletedCount(), checklist.checkItems.size()), 4)).append(System.lineSeparator());

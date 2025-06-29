@@ -18,15 +18,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-@Service
 public class BoardsExporter {
 
     private static final Logger logger = LoggerFactory.getLogger(BoardsExporter.class);
 
-    @Autowired
-    private BoardExporter boardExporter;
-
-    public void export(List<Board> boards) {
+    public static void export(List<Board> boards) {
 
         System.out.println("Exporting boards ...");
 

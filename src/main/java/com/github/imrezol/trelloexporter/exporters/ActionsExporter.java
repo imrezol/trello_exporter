@@ -14,11 +14,7 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
-@Service
 public class ActionsExporter {
-
-    @Autowired
-    private TrelloApi trelloApi;
 
     public void export(BufferedWriter writer, Card card) throws IOException {
         if (card.badges.comments == 0) {

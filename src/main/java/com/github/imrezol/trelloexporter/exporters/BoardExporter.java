@@ -23,13 +23,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
+
 public class BoardExporter {
 
     private static final Logger logger = LoggerFactory.getLogger(BoardExporter.class);
 
 
-    public void export(Board board) {
+    public static void export(Board board) {
 
         System.out.println(String.format(Utils.pad(1,"Exporting board:%s"), board.name));
 
@@ -52,7 +52,7 @@ public class BoardExporter {
 
 
 
-    private String generateLists(Board board){
+    private static String generateLists(Board board){
 
         Map<String, List<Card>> cardsByList = new HashMap<>();
 
@@ -113,7 +113,7 @@ public class BoardExporter {
     }
 
 
-    private String getHeader(Board board) {
+    private static String getHeader(Board board) {
         StringBuilder sb = new StringBuilder()
                 .append("Export date: ").append(Utils.dateToStringWithTimeZone(Properties.exportDate)).append(System.lineSeparator())
                 .append("<br>").append(System.lineSeparator())

@@ -12,11 +12,10 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.List;
 
-@Service
 public class CommentsExporter {
 
 
-    public void export(BufferedWriter writer, Card card, List<Action> actions) throws IOException {
+    public static void export(BufferedWriter writer, Card card, List<Action> actions) throws IOException {
         if (card.badges.comments == 0) {
             return;
         }
@@ -37,7 +36,7 @@ public class CommentsExporter {
 
     }
 
-    private void generateComment(BufferedWriter writer, Action action, Card card)  {
+    private static void generateComment(BufferedWriter writer, Action action, Card card)  {
         StringBuilder sb = new StringBuilder()
                 .append(System.lineSeparator())
                 .append(action.toMd(card.attachments)).append(System.lineSeparator())

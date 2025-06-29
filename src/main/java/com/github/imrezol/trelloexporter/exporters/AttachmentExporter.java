@@ -19,16 +19,14 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-@Service
 public class AttachmentExporter {
 
     private static final Logger logger = LoggerFactory.getLogger(AttachmentExporter.class);
 
 
-
     private static final OkHttpClient client = new OkHttpClient();
 
-    public void export(BufferedWriter writer, Card card) throws IOException {
+    public static void export(BufferedWriter writer, Card card) throws IOException {
         if (card.attachments.isEmpty()) {
             return;
         }
