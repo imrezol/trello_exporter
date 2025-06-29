@@ -2,6 +2,7 @@ package com.github.imrezol.trelloexporter.exporters;
 
 import com.github.imrezol.trelloexporter.Properties;
 import com.github.imrezol.trelloexporter.Utils;
+import com.github.imrezol.trelloexporter.trello.dto.Action;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
 import com.github.imrezol.trelloexporter.trello.dto.Checklist;
 import net.steppschuh.markdowngenerator.link.Link;
@@ -25,18 +26,20 @@ public class CardExporter {
 
     private static final Logger logger = LoggerFactory.getLogger(CardExporter.class);
 
+    @Autowired
+    private AttachmentExporter attachmentExporter;
 
     @Autowired
     private ChecklistExporter checklistExporter;
 
     @Autowired
-    private AttachmentExporter attachmentExporter;
+    private CommentsExporter commentsExporter;
 
     @Autowired
     private ActionsExporter actionsExporter;
 
 
-    public void export(String boardName, Card card, List<Checklist> checklists, String listName) {
+    public void export(String boardName, Card card, List<Checklist> checklists, String listName, List<Action> actions) {
         System.out.println(String.format(Utils.pad(2, "Exporting Card:%s"), card.name));
 
         String cardDir = Utils.getUrl(card.id, Properties.baseDir, card.idBoard);
@@ -50,9 +53,10 @@ public class CardExporter {
             generateCard(writer, card, listName);
             checklistExporter.export(writer, checklists);
 
-            attachmentExporter.export(writer, card);
+            attachmentExporter.export(writer,card);
 
-// IZEIZE            actionsExporter.export(writer, card);
+            commentsExporter.export(writer, card, actions);
+
 
         } catch (IOException e) {
             throw new RuntimeException(e);

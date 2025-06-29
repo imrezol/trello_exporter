@@ -1,11 +1,15 @@
 package com.github.imrezol.trelloexporter;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.imrezol.trelloexporter.exporters.BoardExporter;
 import com.github.imrezol.trelloexporter.exporters.BoardsExporter;
 import com.github.imrezol.trelloexporter.exporters.CardExporter;
 import com.github.imrezol.trelloexporter.trello.dto.*;
 import com.github.imrezol.trelloexporter.trello.service.ApiProperties;
 import com.github.imrezol.trelloexporter.trello.service.TrelloApi;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -48,6 +52,7 @@ public class TrelloExporterApplication
 
         List<Board> boards = new ArrayList<>();
         for (String filename : args) {
+            System.out.println("Processing file: " + filename);
             try {
                 String jsonString = Files.readString(Path.of(filename), StandardCharsets.UTF_8);
                 Board board = Board.fromJson(jsonString);
@@ -61,6 +66,29 @@ public class TrelloExporterApplication
 
         downloadAttachments(boards);
 
+        Set<String> actionTypes = new HashSet<>();
+
+        for (Board board : boards) {
+            for (Action action : board.actions) {
+                actionTypes.add(action.type);
+
+                if (!action.isCardRelated() && !action.isBoardRelated()) {
+                    System.out.println(Utils.lineSeparator);
+                    System.out.println("Action type: " + action.type);
+                    String s = null;
+                    try {
+                        ObjectMapper objectMapper = Utils.getObjectMapper();
+                        objectMapper.setSerializationInclusion(Include.NON_NULL);
+                        s = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(action.data);
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                    System.out.println(s);
+                    System.out.println(Utils.lineSeparator);
+                    System.exit(0);
+                }
+            }
+        }
 
         generateMdFiles(boards);
     }
@@ -102,12 +130,24 @@ public class TrelloExporterApplication
             boardExporter.export(board);
 
             Map<String, List<Checklist>> checklistsByCardId = getChecklistsByCardId(board);
+            Map<String, List<Action>> actionsByCardId = getActionsByCardId(board);
             Map<String, TrelloList> listsById = getlistsById(board);
             for (Card card : board.cards) {
-                cardExporter.export(board.name, card, checklistsByCardId.get(card.id), listsById.get(card.idList).name);
+                cardExporter.export(board.name, card, checklistsByCardId.get(card.id), listsById.get(card.idList).name, actionsByCardId.get(card.id) == null ? Collections.emptyList() : actionsByCardId.get(card.id));
             }
         }
 
+    }
+
+    private static Map<String, List<Action>> getActionsByCardId(Board board) {
+        Map<String, List<Action>> actionsByCardId = new HashMap<>();
+
+        for (Action acction : board.actions) {
+            List<Action> actions = actionsByCardId.computeIfAbsent(acction.data.idCard, k -> new ArrayList<>());
+            actions.add(acction);
+        }
+
+        return actionsByCardId;
     }
 
     private static Map<String, List<Checklist>> getChecklistsByCardId(Board board) {
