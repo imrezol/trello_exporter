@@ -12,7 +12,7 @@
 * Boards
 * Board
 * List
-* Card badge TODO
+* Card badge
   * Due date
   * Description
   * Comments
@@ -20,6 +20,7 @@
   * Checklist items
 * Card
   * Name
+  * List name
   * Last activity
   * Due date
   * Cover TODO

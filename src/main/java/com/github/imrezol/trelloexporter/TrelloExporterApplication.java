@@ -3,10 +3,7 @@ package com.github.imrezol.trelloexporter;
 import com.github.imrezol.trelloexporter.exporters.BoardExporter;
 import com.github.imrezol.trelloexporter.exporters.BoardsExporter;
 import com.github.imrezol.trelloexporter.exporters.CardExporter;
-import com.github.imrezol.trelloexporter.trello.dto.Board;
-import com.github.imrezol.trelloexporter.trello.dto.Card;
-import com.github.imrezol.trelloexporter.trello.dto.CardAttachment;
-import com.github.imrezol.trelloexporter.trello.dto.Checklist;
+import com.github.imrezol.trelloexporter.trello.dto.*;
 import com.github.imrezol.trelloexporter.trello.service.ApiProperties;
 import com.github.imrezol.trelloexporter.trello.service.TrelloApi;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,17 +101,31 @@ public class TrelloExporterApplication
         for (Board board : boards) {
             boardExporter.export(board);
 
-            Map<String, List<Checklist>> checklistsByCardId = new HashMap<>();
-
-            for (Checklist checklist : board.checklists) {
-                List<Checklist> checklists = checklistsByCardId.computeIfAbsent(checklist.idCard, k -> new ArrayList<>());
-                checklists.add(checklist);
-            }
-
+            Map<String, List<Checklist>> checklistsByCardId = getChecklistsByCardId(board);
+            Map<String, TrelloList> listsById = getlistsById(board);
             for (Card card : board.cards) {
-                cardExporter.export(board.name, card, checklistsByCardId.get(card.id));
+                cardExporter.export(board.name, card, checklistsByCardId.get(card.id), listsById.get(card.idList).name);
             }
         }
 
+    }
+
+    private static Map<String, List<Checklist>> getChecklistsByCardId(Board board) {
+        Map<String, List<Checklist>> checklistsByCardId = new HashMap<>();
+
+        for (Checklist checklist : board.checklists) {
+            List<Checklist> checklists = checklistsByCardId.computeIfAbsent(checklist.idCard, k -> new ArrayList<>());
+            checklists.add(checklist);
+        }
+        return checklistsByCardId;
+    }
+
+    private static Map<String, TrelloList> getlistsById(Board board) {
+        Map<String, TrelloList> listsById = new HashMap<>();
+
+        for (TrelloList trelloList : board.lists) {
+            listsById.put(trelloList.id, trelloList);
+        }
+        return listsById;
     }
 }

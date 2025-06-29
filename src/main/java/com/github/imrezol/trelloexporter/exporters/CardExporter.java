@@ -36,7 +36,7 @@ public class CardExporter {
     private ActionsExporter actionsExporter;
 
 
-    public void export(String boardName, Card card, List<Checklist> checklists) {
+    public void export(String boardName, Card card, List<Checklist> checklists, String listName) {
         System.out.println(String.format(Utils.pad(2, "Exporting Card:%s"), card.name));
 
         String cardDir = Utils.getUrl(card.id, Properties.baseDir, card.idBoard);
@@ -47,7 +47,7 @@ public class CardExporter {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName.toString(), true))) {
 
             generateHeader(writer, boardName);
-            generateCard(writer, card);
+            generateCard(writer, card, listName);
             checklistExporter.export(writer, checklists);
 
             attachmentExporter.export(writer, card);
@@ -60,7 +60,7 @@ public class CardExporter {
 
     }
 
-    private void generateCard(BufferedWriter writer, Card card) throws IOException {
+    private void generateCard(BufferedWriter writer, Card card, String listName) throws IOException {
         StringBuilder sb = new StringBuilder()
                 .append(new Heading(card.name, 2)).append(System.lineSeparator());
 
@@ -71,11 +71,11 @@ public class CardExporter {
                     .append("<br>").append(System.lineSeparator());
         }
 
-        sb.append("Last activity: ").append(Utils.dateToString(card.dateLastActivity)).append(System.lineSeparator());
+        sb.append("List: ").append(listName).append("<br>").append(System.lineSeparator());
+        sb.append("Last activity: ").append(Utils.dateToString(card.dateLastActivity)).append("<br>").append(System.lineSeparator());
 
         if (card.due != null) {
-            sb.append("<br>").append(System.lineSeparator())
-                    .append("Due: " + Utils.dateToString(card.due)).append(System.lineSeparator());
+            sb.append("Due: " + Utils.dateToString(card.due)).append(System.lineSeparator());
         }
 
 
