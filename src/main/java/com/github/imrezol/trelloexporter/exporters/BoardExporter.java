@@ -68,7 +68,9 @@ public class BoardExporter {
         }
 
         Table.Builder tableBuilder = new Table.Builder()
-                .addRow(board.lists.stream().map(trelloList -> trelloList.name ).toArray());
+                .addRow(board.lists.stream()
+                        .filter(trelloList -> !trelloList.closed)
+                        .map(trelloList -> trelloList.name ).toArray());
 
         int rowIndex = 0;
         while (true) {
