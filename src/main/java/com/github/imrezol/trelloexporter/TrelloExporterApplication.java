@@ -62,26 +62,29 @@ public class TrelloExporterApplication
             }
         }
 
+        downloadAttachments(boards);
+
+
+        generateMdFiles(boards);
+    }
+
+    private void downloadAttachments(List<Board> boards) {
+
+        System.out.println("Downloading attachments:");
+
         if (!apiProperties.isConfigured) {
 
             System.out.println(Utils.lineSeparator);
 
-            System.out.println("No TRELLO API KEY or TRELLO TOKEN environment variable, attachments won't downloaded");
+            System.out.println("No TRELLO_API_KEY or TRELLO_TOKEN environment variable, attachments won't downloaded");
             System.out.println("To get API key and token visit this site: https://trello.com/app-key");
+
             System.out.println(Utils.lineSeparator);
             System.out.println("Press Enter to continue...");
             System.out.println(Utils.lineSeparator);
-            if (boards.isEmpty()) {
-                System.out.println("No boards specified, exiting..."); // IZEIZE
-            }
             Scanner scanner = new Scanner(System.in);
             scanner.nextLine();
-
-            if (boards.isEmpty()) {
-                System.exit(0);
-            }
         } else {
-            System.out.println("Downloading attachments...");
             for (Board board : boards) {
                 for (Card card : board.cards) {
                     String targetDir = Utils.getUrl(Properties.attachmentsDir, Properties.baseDir, board.id, card.id);
@@ -90,11 +93,9 @@ public class TrelloExporterApplication
                     }
                 }
             }
-            System.out.println();
         }
 
-
-        generateMdFiles(boards);
+        System.out.println();
     }
 
     private void generateMdFiles(List<Board> boards) {

@@ -1,24 +1,23 @@
 # Export Trello Boards 
-* Export to Markdown files and attachments to file system
+* Export all Boards, Lists, Cards and attachments as Markdown files to local file system
 * Save data to json files too
-* Only Free Plan features export 
+* Export only Free Plan features data 
 
+## Configure
+* get API key and token: https://trello.com/app-key
+* set TRELLO_API_KEY environment variable 
+* set TRELLO_TOKEN environment variable
 
-## Get API key and token
-https://trello.com/app-key
-
-# Functions
+## Functions
 * Boards
 * Board
-  * Lists
 * List
-  * Cards
-  * Card badge TODO
-    * Due date
-    * Description
-    * Comments
-    * Attachments
-    * Checklist items
+* Card badge TODO
+  * Due date
+  * Description
+  * Comments
+  * Attachments
+  * Checklist items
 * Card
   * Name
   * Last activity
@@ -36,8 +35,54 @@ https://trello.com/app-key
   * Activities? TODO?
   * Assignee? TODO?
 
+## TODO:
+* Closed Card
+* Closed List
+* Closed Board
+
+# Exported files hierarchy
+* exports
+  * [export date and time]
+    * Boards.md
+    * [Board ID]
+      * Board.md
+      * Board.json
+      * [Card ID]
+        * Card.md
+        * Card.json
+        * Attachments.json
+        * Checklists.json
+        * Attachments
+          * [Attachment ID]
+            * [Attachments filename]
+
+```
+exports
+└── tsconfig.json
+│   ├── button.d.ts
+│   ├── button.js
+│   ├── button.js.map
+│   ├── button.stories.d.ts
+│   ├── button.stories.js
+│   ├── button.stories.js.map
+│   ├── index.d.ts
+│   ├── index.js
+│   └── index.js.map
+├── package.json
+├── src
+│   ├── button.stories.tsx
+│   ├── button.tsx
+│   └── index.ts
+└── tsconfig.json
+```
+## Recomended MarkDown viewers:
+* Mac os: [MacDown](https://macdown.uranusjr.com/)
+* Windows: [TOOD](https://github.com/imrezol/trello_exporter)
+* Linux: [TODO](https://github.com/imrezol/trello_exporter)
+
 ## Trello REST API
-https://developer.atlassian.com/cloud/trello/rest/
+* API Introduction: https://developer.atlassian.com/cloud/trello/guides/rest-api/api-introduction/
+* The Trello REST API: https://developer.atlassian.com/cloud/trello/rest/
 
 
 jpackage

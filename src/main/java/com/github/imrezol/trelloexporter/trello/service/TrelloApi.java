@@ -105,7 +105,7 @@ public class TrelloApi {
 
     public  void downloadAttachment(Card card, CardAttachment attachment, String targetDir) {
 
-        System.out.println(String.format("Downloading attachment:%s", attachment.fileName));
+        System.out.println(Utils.pad(1,attachment.fileName));
 
         Utils.ensureDirectory(targetDir);
         String fileName = Utils.getUrl(attachment.getLocalFilename(), targetDir);

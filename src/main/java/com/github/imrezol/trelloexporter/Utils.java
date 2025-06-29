@@ -3,7 +3,6 @@ package com.github.imrezol.trelloexporter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.vdurmont.emoji.EmojiParser;
 
 import java.io.File;
 import java.io.IOException;
