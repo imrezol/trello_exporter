@@ -85,7 +85,14 @@ public class BoardExporter {
                 if (cards.size()>rowIndex) {
                     wasCard = true;
                     Card card = cards.get(rowIndex);
-                    cells.add( new Link(card.name, Utils.getUrl(Properties.getCardMd(), card.id))) ;
+                    String badges = Badges.generateCardBadge(card.badges);
+                    Link link = new Link(card.name, Utils.getUrl(Properties.getCardMd(), card.id));
+                    if (Strings.isNotBlank(badges)) {
+                        cells.add( link + "<br>" + badges) ;
+                    } else {
+                        cells.add(link) ;
+                    }
+
                 } else {
                     cells.add(null);
                 }

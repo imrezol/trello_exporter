@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter;
 public class Utils {
 
     public static final DateTimeFormatter formatter =  DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());
+    public static final DateTimeFormatter dueFormatter =  DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.systemDefault());
     public static final DateTimeFormatter formatterWithTimeZone =  DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss VV").withZone(ZoneId.systemDefault());
     public static String lineSeparator = "*".repeat(20);
 
@@ -26,9 +27,14 @@ public class Utils {
         return objectMapper;
     }
 
+    public static String dueToString(ZonedDateTime dateTime){
+        return dueFormatter.format(dateTime);
+    }
+
     public static String dateToString(ZonedDateTime dateTime){
         return formatter.format(dateTime);
     }
+
     public static String dateToStringWithTimeZone(ZonedDateTime dateTime){
         return formatterWithTimeZone.format(dateTime);
     }

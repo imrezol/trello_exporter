@@ -62,8 +62,16 @@ public class CardExporter {
 
     private void generateCard(BufferedWriter writer, Card card) throws IOException {
         StringBuilder sb = new StringBuilder()
-                .append(new Heading(card.name, 2)).append(System.lineSeparator())
-                .append("Last activity: ").append(Utils.dateToString(card.dateLastActivity)).append(System.lineSeparator());
+                .append(new Heading(card.name, 2)).append(System.lineSeparator());
+
+        String badge = Badges.generateCardBadge(card.badges);
+        if (!Strings.isBlank(badge)) {
+            sb.append(badge)
+                    .append("<br>").append(System.lineSeparator())
+                    .append("<br>").append(System.lineSeparator());
+        }
+
+        sb.append("Last activity: ").append(Utils.dateToString(card.dateLastActivity)).append(System.lineSeparator());
 
         if (card.due != null) {
             sb.append("<br>").append(System.lineSeparator())
