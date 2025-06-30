@@ -2,6 +2,7 @@ package com.github.imrezol.trelloexporter.exporters;
 
 import com.github.imrezol.trelloexporter.Properties;
 import com.github.imrezol.trelloexporter.Utils;
+import com.github.imrezol.trelloexporter.generator.Badges;
 import com.github.imrezol.trelloexporter.trello.dto.Action;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
 import com.github.imrezol.trelloexporter.trello.dto.Checklist;
@@ -10,8 +11,6 @@ import com.github.imrezol.trelloexporter.utils.FileUtil;
 import net.steppschuh.markdowngenerator.link.Link;
 import net.steppschuh.markdowngenerator.text.heading.Heading;
 import org.apache.logging.log4j.util.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -23,7 +22,7 @@ import java.util.List;
 
 public class CardExporter {
 
-    private static final Logger logger = LoggerFactory.getLogger(CardExporter.class);
+    public final static String baseFilename = "Card";
 
 
     public static void export(String boardName, Card card, List<Checklist> checklists, String listName, List<Action> actions) {

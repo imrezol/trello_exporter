@@ -3,12 +3,8 @@ package com.github.imrezol.trelloexporter;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.imrezol.trelloexporter.exporters.BoardExporter;
-import com.github.imrezol.trelloexporter.generator.BoardsGenerator;
+import com.github.imrezol.trelloexporter.generator.*;
 import com.github.imrezol.trelloexporter.exporters.CardExporter;
-import com.github.imrezol.trelloexporter.generator.Generator;
-import com.github.imrezol.trelloexporter.generator.HtmlGenerator;
-import com.github.imrezol.trelloexporter.generator.MdGenerator;
 import com.github.imrezol.trelloexporter.trello.dto.*;
 import com.github.imrezol.trelloexporter.trello.service.ApiProperties;
 import com.github.imrezol.trelloexporter.trello.service.TrelloApi;
@@ -130,7 +126,8 @@ public class TrelloExporterApplication
         new BoardsGenerator(mdGenerator, boards).generate();
 
         for (Board board : boards) {
-            BoardExporter.export(board);
+            new BoardGenerator(htmlGenerator, board).generate();
+            new BoardGenerator(mdGenerator, board).generate();
 
             Map<String, List<Checklist>> checklistsByCardId = getChecklistsByCardId(board);
             Map<String, List<Action>> actionsByCardId = getActionsByCardId(board);

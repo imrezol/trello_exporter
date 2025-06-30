@@ -25,8 +25,8 @@ public class HtmlGenerator implements Generator {
             """;
 
     @Override
-    public String extension() {
-        return ".html";
+    public String filename(String baseName) {
+        return baseName+ ".html";
     }
 
     @Override

@@ -16,8 +16,8 @@ https://www.markdownguide.org/basic-syntax/
 public class MdGenerator implements Generator {
 
     @Override
-    public String extension(){
-        return ".md";
+    public String filename(String baseName) {
+        return baseName + ".md";
     }
 
     @Override
