@@ -21,6 +21,11 @@ public class MdGenerator implements Generator {
     }
 
     @Override
+    public String escape(String text) {
+        return text;
+    }
+
+    @Override
     public String begin(String title) {
         return null;
     }

@@ -9,7 +9,7 @@ import com.github.imrezol.trelloexporter.utils.FileUtil;
 
 import java.util.List;
 
-public  class BoardsGenerator {
+public class BoardsGenerator {
 
     private Generator generator;
     private List<Board> boards;
@@ -65,7 +65,7 @@ public  class BoardsGenerator {
     private String generateBoardsRow(Board board) {
         String link = generator.link(board.name, FileUtil.getUrl2(board.id, "Board" + generator.extension()));
 
-        return generator.tableRow(link, board.desc, DateUtil.dateToString(board.dateLastActivity));
+        return generator.tableRow(link, generator.escape(board.desc), DateUtil.dateToString(board.dateLastActivity));
     }
 
     private String getFilename() {

@@ -6,6 +6,8 @@ public interface Generator {
 
     String extension();
 
+    String escape(String text);
+
     String begin(String title);
 
     String end();

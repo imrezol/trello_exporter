@@ -2,12 +2,11 @@ package com.github.imrezol.trelloexporter.generator;
 
 import com.github.imrezol.trelloexporter.utils.Builder;
 import com.github.imrezol.trelloexporter.Properties;
-import com.github.imrezol.trelloexporter.Utils;
 import com.github.imrezol.trelloexporter.utils.DateUtil;
+import org.springframework.web.util.HtmlUtils;
 
 import java.time.ZonedDateTime;
 
-import static org.springframework.web.util.HtmlUtils.htmlEscape;
 
 /*
 https://github.com/hail2u/html-best-practices
@@ -31,6 +30,11 @@ public class HtmlGenerator implements Generator {
     }
 
     @Override
+    public String escape(String text) {
+        return HtmlUtils.htmlEscape(text);
+    }
+
+    @Override
     public String begin(String title) {
         return new Builder()
                 .appendLine("<!DOCTYPE html>")
@@ -38,7 +42,7 @@ public class HtmlGenerator implements Generator {
                 .appendLine("<head>")
                 .appendLine("<meta charset=\"UTF-8\"> ")
                 .appendLine(style)
-                .appendLine("<title>").append(htmlEscape(title)).append("</title>")
+                .appendLine("<title>").append(escape(title)).append("</title>")
                 .appendLine("</head>")
                 .appendLine("<body>")
                 .toString();
@@ -57,7 +61,7 @@ public class HtmlGenerator implements Generator {
         String tag = "h" + level;
         return new Builder()
                 .append("<" + tag + ">")
-                .append(htmlEscape(text))
+                .append(escape(text))
                 .appendLine("</" + tag + ">")
                 .toString();
     }
@@ -66,7 +70,7 @@ public class HtmlGenerator implements Generator {
     public String link(String text, String uri) {
         return new Builder()
                 .append("<a href=\"").append(uri).append("\">")
-                .append(htmlEscape(text))
+                .append(escape(text))
                 .append("</a>")
                 .toString();
     }
@@ -76,7 +80,7 @@ public class HtmlGenerator implements Generator {
         Builder sb = new Builder();
         sb.appendLine("<tr>");
         for (String cell : cells) {
-            sb.appendLine("<td>").append(htmlEscape(cell)).append("</td>");
+            sb.appendLine("<td>").append(cell).append("</td>");
         }
         sb.appendLine("</tr>");
         return sb.toString();
@@ -89,7 +93,7 @@ public class HtmlGenerator implements Generator {
         sb.appendLine("<tr>");
         for (String header : headers) {
             sb.appendLine("<th>");
-            sb.appendLine(htmlEscape(header));
+            sb.appendLine(header);
             sb.appendLine("</th>");
         }
         sb.appendLine("</tr>");
@@ -105,7 +109,7 @@ public class HtmlGenerator implements Generator {
 
     @Override
     public String bold(String str) {
-        return "<b>" + htmlEscape(str) + "</b>";
+        return "<b>" + escape(str) + "</b>";
     }
 
     @Override
@@ -114,7 +118,7 @@ public class HtmlGenerator implements Generator {
                 .append("<div>")
                 .append(bold(name))
                 .append(": ")
-                .append(htmlEscape(value))
+                .append(escape(value))
                 .appendLine("/<div>")
                 .toString();
     }
