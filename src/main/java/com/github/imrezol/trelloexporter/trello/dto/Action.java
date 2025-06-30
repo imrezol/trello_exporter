@@ -41,7 +41,8 @@ public class Action {
     public String toMd(List<CardAttachment> attachemnts) {
         StringBuilder sb = new StringBuilder()
                 .append(new BoldText("Date:")).append(" "+ DateUtil.dateToString(date)).append("<br>").append(System.lineSeparator())
-                .append(new BoldText("User:")).append(String.format(" %s (%s)",memberCreator.fullName, memberCreator.username)).append("<br>").append(System.lineSeparator());;
+                .append(new BoldText("User:")).append(String.format(" %s (%s)",memberCreator.fullName, memberCreator.username)).append("<br>").append(System.lineSeparator())
+                .append(new BoldText("Content:")).append("<br>").append(System.lineSeparator());;
 
         switch (type) {
             case "commentCard":

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.imrezol.trelloexporter.generator.*;
-import com.github.imrezol.trelloexporter.exporters.CardExporter;
+import com.github.imrezol.trelloexporter.generator.CardGenerator;
 import com.github.imrezol.trelloexporter.trello.dto.*;
 import com.github.imrezol.trelloexporter.trello.service.ApiProperties;
 import com.github.imrezol.trelloexporter.trello.service.TrelloApi;
@@ -54,7 +54,7 @@ public class TrelloExporterApplication
             }
         }
 
-// TODO       downloadAttachments(boards);
+ downloadAttachments(boards);
 
         debug(boards);
 
@@ -106,7 +106,7 @@ public class TrelloExporterApplication
         } else {
             for (Board board : boards) {
                 for (Card card : board.cards) {
-                    String targetDir = Utils.getUrl(Properties.attachmentsDir, Properties.baseDir, board.id, card.id);
+                    String targetDir = Utils.getUrl(CardGenerator.attachmentsDir, Properties.baseDir, board.id, card.id);
                     for (CardAttachment attachment : card.attachments) {
                         trelloApi.downloadAttachment(card, attachment, targetDir);
                     }
@@ -133,7 +133,12 @@ public class TrelloExporterApplication
             Map<String, List<Action>> actionsByCardId = getActionsByCardId(board);
             Map<String, TrelloList> listsById = getListsByCard(board);
             for (Card card : board.cards) {
-                CardExporter.export(board.name, card, checklistsByCardId.get(card.id), listsById.get(card.idList).name, actionsByCardId.get(card.id) == null ? Collections.emptyList() : actionsByCardId.get(card.id));
+
+                new CardGenerator(mdGenerator,card, board.name, listsById.get(card.idList).name, checklistsByCardId.get(card.id), actionsByCardId.get(card.id))
+                        .generate();
+
+                new CardGenerator(htmlGenerator,card, board.name, listsById.get(card.idList).name, checklistsByCardId.get(card.id), actionsByCardId.get(card.id))
+                        .generate();
             }
         }
 

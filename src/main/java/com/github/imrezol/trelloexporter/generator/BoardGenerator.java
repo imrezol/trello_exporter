@@ -2,7 +2,6 @@ package com.github.imrezol.trelloexporter.generator;
 
 import com.github.imrezol.trelloexporter.Properties;
 import com.github.imrezol.trelloexporter.Utils;
-import com.github.imrezol.trelloexporter.exporters.CardExporter;
 import com.github.imrezol.trelloexporter.trello.dto.Board;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
 import com.github.imrezol.trelloexporter.trello.dto.TrelloList;
@@ -34,7 +33,8 @@ public class BoardGenerator {
         Builder sb = new Builder()
                 .append(generator.begin(baseFilename))
                 .append(getHeader())
-                .append(generateLists());
+                .append(generateLists())
+                .append(generator.end());
 
 
         FileUtil.saveToFile(FileUtil.getUrl2(Properties.baseDir, board.id, generator.filename(baseFilename)), sb.toString());
@@ -87,7 +87,7 @@ public class BoardGenerator {
                     wasCard = true;
                     Card card = cards.get(rowIndex);
                     String badges = Badges.generateCardBadge(card.badges);
-                    String link = generator.link(card.name, FileUtil.getUrl2(card.id, generator.filename(CardExporter.baseFilename))); // IZEIZE
+                    String link = generator.link(card.name, FileUtil.getUrl2(card.id, generator.filename(CardGenerator.baseFilename))); // IZEIZE
                     if (Strings.isNotBlank(badges)) {
                         cells.add(link + "<br>" + badges);
                     } else {

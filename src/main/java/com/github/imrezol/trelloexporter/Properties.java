@@ -8,12 +8,6 @@ import java.time.format.DateTimeFormatter;
 
 public class Properties {
 
-    private static final String boardsFilename = "Boards";
-    private static final String boardFilename = "Board";
-    private static final String cardFilename = "Card";
-    public static final String actionsFilename = "Actions";
-    public static final String attachmentsDir = "Attachments";
-
     public static final ZonedDateTime exportDate = ZonedDateTime.now();
 
     public static final String baseDir = String.format(
@@ -21,20 +15,4 @@ public class Properties {
             DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"
             ).format(exportDate));
 
-
-    public static String getBoardsMd() {
-        return boardsFilename + ".md";
-    }
-
-    public static String getBoardMd() {
-        return boardFilename + ".md";
-    }
-
-    public static String getCardMd() {
-        return cardFilename + ".md";
-    }
-
-    public static String getActionsMd() {
-        return actionsFilename + ".md";
-    }
 }

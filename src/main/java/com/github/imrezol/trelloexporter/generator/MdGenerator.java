@@ -51,6 +51,12 @@ public class MdGenerator implements Generator {
         return "[" + text + "](" + uri + ")";
     }
 
+    @Deprecated
+    @Override
+    public  String linkNewTab(String text, String uri) {
+        return link(text, uri);
+    }
+
     @Override
     public  String tableRow(String ...cells) {
         Builder sb = new Builder();
@@ -111,5 +117,22 @@ public class MdGenerator implements Generator {
     @Override
     public String property(String name, ZonedDateTime dateTime) {
         return property(name, DateUtil.dateToString(dateTime));
+    }
+
+    @Override
+    public String md(String mdStr) {
+        return new Builder()
+                .appendNewLine()
+                .appendLine(mdStr)
+                .toString();
+    }
+
+    @Override
+    public String rule() {
+        return new Builder()
+                .appendNewLine()
+                .appendLine("---")
+                .appendNewLine()
+                .toString() ;
     }
 }

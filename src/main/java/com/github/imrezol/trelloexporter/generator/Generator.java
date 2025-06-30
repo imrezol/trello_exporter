@@ -1,20 +1,6 @@
 package com.github.imrezol.trelloexporter.generator;
 
-import com.github.imrezol.trelloexporter.Properties;
-import com.github.imrezol.trelloexporter.Utils;
-import com.github.imrezol.trelloexporter.exporters.CardExporter;
-import com.github.imrezol.trelloexporter.trello.dto.Board;
-import com.github.imrezol.trelloexporter.trello.dto.Card;
-import com.github.imrezol.trelloexporter.trello.dto.TrelloList;
-import com.github.imrezol.trelloexporter.utils.Builder;
-import com.github.imrezol.trelloexporter.utils.FileUtil;
-import org.apache.logging.log4j.util.Strings;
-
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public interface Generator {
 
@@ -29,6 +15,7 @@ public interface Generator {
     String heading(String text, int level);
 
     String link(String text, String uri);
+    String linkNewTab(String text, String uri);
 
     String tableRow(String... cells);
 
@@ -44,4 +31,7 @@ public interface Generator {
 
     String property(String name, ZonedDateTime dateTime);
 
+    String md(String mdStr);
+
+    String rule();
 }

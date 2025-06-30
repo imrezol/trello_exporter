@@ -24,6 +24,10 @@ public class HtmlGenerator implements Generator {
             </style>
             """;
 
+    private final String valami = """
+            <script src="https://cdn.jsdelivr.net/gh/MarketingPipeline/Markdown-Tag/markdown-tag.js"></script>
+            """;
+
     @Override
     public String filename(String baseName) {
         return baseName+ ".html";
@@ -43,6 +47,7 @@ public class HtmlGenerator implements Generator {
                 .appendLine("<meta charset=\"UTF-8\"> ")
                 .appendLine(style)
                 .appendLine("<title>").append(escape(title)).append("</title>")
+                .appendLine(valami)
                 .appendLine("</head>")
                 .appendLine("<body>")
                 .toString();
@@ -70,6 +75,15 @@ public class HtmlGenerator implements Generator {
     public String link(String text, String uri) {
         return new Builder()
                 .append("<a href=\"").append(uri).append("\">")
+                .append(escape(text))
+                .append("</a>")
+                .toString();
+    }
+
+    @Override
+    public String linkNewTab(String text, String uri) {
+        return new Builder()
+                .append("<a href=\"").append(uri).append("\" target=\"_blank\">")
                 .append(escape(text))
                 .append("</a>")
                 .toString();
@@ -131,6 +145,16 @@ public class HtmlGenerator implements Generator {
     @Override
     public String property(String name, ZonedDateTime dateTime) {
         return property(name, DateUtil.dateToString(dateTime));
+    }
+
+    @Override
+    public String md(String mdStr) {
+        return "<md>" + mdStr + "<md>";
+    }
+
+    @Override
+    public String rule() {
+        return new Builder().appendLine("<hr>").toString() ;
     }
 
 }
