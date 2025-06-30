@@ -1,8 +1,6 @@
 package com.github.imrezol.trelloexporter.generator;
 
 import com.github.imrezol.trelloexporter.utils.Builder;
-import com.github.imrezol.trelloexporter.Properties;
-import com.github.imrezol.trelloexporter.Utils;
 import com.github.imrezol.trelloexporter.utils.DateUtil;
 
 import java.time.ZonedDateTime;
@@ -111,7 +109,7 @@ public class MdGenerator implements Generator {
 
     @Override
     public String exportedDateProperty() {
-        return property("Export date", DateUtil.dateToStringWithTimeZone(Properties.exportDate));
+        return property("Export date", DateUtil.dateToStringWithTimeZone(DateUtil.exportDate));
     }
 
     @Override

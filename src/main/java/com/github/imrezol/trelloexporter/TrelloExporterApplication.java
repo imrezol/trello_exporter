@@ -8,6 +8,9 @@ import com.github.imrezol.trelloexporter.generator.CardGenerator;
 import com.github.imrezol.trelloexporter.trello.dto.*;
 import com.github.imrezol.trelloexporter.trello.service.ApiProperties;
 import com.github.imrezol.trelloexporter.trello.service.TrelloApi;
+import com.github.imrezol.trelloexporter.utils.ConsoleUtil;
+import com.github.imrezol.trelloexporter.utils.FileUtil;
+import com.github.imrezol.trelloexporter.utils.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -69,18 +72,18 @@ public class TrelloExporterApplication
                 actionTypes.add(action.type);
 
                 if (!action.isCardRelated() && !action.isBoardRelated()) {
-                    System.out.println(Utils.lineSeparator);
+                    System.out.println(ConsoleUtil.lineSeparator);
                     System.out.println("Action type: " + action.type);
                     String s = null;
                     try {
-                        ObjectMapper objectMapper = Utils.getObjectMapper();
+                        ObjectMapper objectMapper = JsonUtil.getObjectMapper();
                         objectMapper.setSerializationInclusion(Include.NON_NULL);
                         s = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(action.data);
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }
                     System.out.println(s);
-                    System.out.println(Utils.lineSeparator);
+                    System.out.println(ConsoleUtil.lineSeparator);
                     System.exit(0);
                 }
             }
@@ -93,20 +96,20 @@ public class TrelloExporterApplication
 
         if (!apiProperties.isConfigured) {
 
-            System.out.println(Utils.lineSeparator);
+            System.out.println(ConsoleUtil.lineSeparator);
 
             System.out.println("No TRELLO_API_KEY or TRELLO_TOKEN environment variable, attachments won't downloaded");
             System.out.println("To get API key and token visit this site: https://trello.com/app-key");
 
-            System.out.println(Utils.lineSeparator);
+            System.out.println(ConsoleUtil.lineSeparator);
             System.out.println("Press Enter to continue...");
-            System.out.println(Utils.lineSeparator);
+            System.out.println(ConsoleUtil.lineSeparator);
             Scanner scanner = new Scanner(System.in);
             scanner.nextLine();
         } else {
             for (Board board : boards) {
                 for (Card card : board.cards) {
-                    String targetDir = Utils.getUrl(CardGenerator.attachmentsDir, Properties.baseDir, board.id, card.id);
+                    String targetDir = FileUtil.getUrl(FileUtil.baseDir, board.id, card.id, CardGenerator.attachmentsDir);
                     for (CardAttachment attachment : card.attachments) {
                         trelloApi.downloadAttachment(card, attachment, targetDir);
                     }

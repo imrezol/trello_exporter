@@ -5,14 +5,20 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.format.DateTimeFormatter;
 
 public class FileUtil {
+
+    public static final String baseDir = String.format(
+            "exports/%s",
+            DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"
+            ).format(DateUtil.exportDate));
 
     public static void ensureDirectory(String dir) {
         new File(dir).mkdirs();
     }
 
-    public static String getUrl2(String... parts) {
+    public static String getUrl(String... parts) {
         return String.join(File.separator, parts);
 
     }

@@ -3,16 +3,14 @@ package com.github.imrezol.trelloexporter.trello.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.imrezol.trelloexporter.Utils;
+import com.github.imrezol.trelloexporter.utils.JsonUtil;
 import com.github.imrezol.trelloexporter.exporters.CardDescriptionFixer;
 import com.github.imrezol.trelloexporter.utils.DateUtil;
-import net.steppschuh.markdowngenerator.text.Text;
 import net.steppschuh.markdowngenerator.text.code.CodeBlock;
 import net.steppschuh.markdowngenerator.text.emphasis.BoldText;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
 
 /*
 https://developer.atlassian.com/cloud/trello/guides/rest-api/action-types/
@@ -52,7 +50,7 @@ public class Action {
                 break;
             default:
                 try {
-                    ObjectMapper objectMapper = Utils.getObjectMapper();
+                    ObjectMapper objectMapper = JsonUtil.getObjectMapper();
                     objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
                     String s = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(data);
                     sb.append(new CodeBlock(s));

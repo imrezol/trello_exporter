@@ -1,12 +1,8 @@
 package com.github.imrezol.trelloexporter.generator;
 
-import com.github.imrezol.trelloexporter.Properties;
-import com.github.imrezol.trelloexporter.Utils;
+import com.github.imrezol.trelloexporter.utils.*;
 import com.github.imrezol.trelloexporter.exporters.CardDescriptionFixer;
 import com.github.imrezol.trelloexporter.trello.dto.*;
-import com.github.imrezol.trelloexporter.utils.Builder;
-import com.github.imrezol.trelloexporter.utils.DateUtil;
-import com.github.imrezol.trelloexporter.utils.FileUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.util.Strings;
 
@@ -36,7 +32,7 @@ public class CardGenerator {
     }
 
     public void generate() {
-        System.out.println(String.format(Utils.pad(2, "Exporting Card:%s"), card.name));
+        System.out.println(String.format(ConsoleUtil.pad(2, "Exporting Card:%s"), card.name));
 
         Builder sb = new Builder()
                 .append(generator.begin(baseFilename))
@@ -48,7 +44,7 @@ public class CardGenerator {
                 .append(generator.end());
 
 
-        FileUtil.saveToFile(FileUtil.getUrl2(Properties.baseDir, card.idBoard, card.id, generator.filename(baseFilename)), sb.toString());
+        FileUtil.saveToFile(FileUtil.getUrl(FileUtil.baseDir, card.idBoard, card.id, generator.filename(baseFilename)), sb.toString());
     }
 
     private String generateCard() {
@@ -134,7 +130,7 @@ public class CardGenerator {
             return "";
         }
 
-        String attachmentsDir = Paths.get(Properties.baseDir, card.idBoard, card.id, CardGenerator.attachmentsDir).toString();
+        String attachmentsDir = Paths.get(FileUtil.baseDir, card.idBoard, card.id, CardGenerator.attachmentsDir).toString();
         FileUtil.ensureDirectory(attachmentsDir);
 
 
@@ -146,7 +142,7 @@ public class CardGenerator {
         for (CardAttachment attachment : card.attachments) {
             sb.append(
                     generator.tableRow(
-                            generator.linkNewTab(attachment.name, FileUtil.getUrl2(CardGenerator.attachmentsDir, attachment.getLocalFilename())),
+                            generator.linkNewTab(attachment.name, FileUtil.getUrl(CardGenerator.attachmentsDir, attachment.getLocalFilename())),
                             attachment.fileName,
                             DateUtil.dateToString(attachment.date),
                             FileUtils.byteCountToDisplaySize(attachment.bytes)

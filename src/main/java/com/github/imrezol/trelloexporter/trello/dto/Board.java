@@ -2,7 +2,7 @@ package com.github.imrezol.trelloexporter.trello.dto;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.imrezol.trelloexporter.Utils;
+import com.github.imrezol.trelloexporter.utils.JsonUtil;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -52,7 +52,7 @@ public class Board {
     public List<Object> pluginData;
 
     public static Board fromJson(String jsonString) {
-        ObjectMapper objectMapper = Utils.getObjectMapper();
+        ObjectMapper objectMapper = JsonUtil.getObjectMapper();
         try {
             return objectMapper.readValue(jsonString, Board.class);
         } catch (JsonProcessingException e) {

@@ -1,6 +1,6 @@
 package com.github.imrezol.trelloexporter.trello.service;
 
-import com.github.imrezol.trelloexporter.Utils;
+import com.github.imrezol.trelloexporter.utils.ConsoleUtil;
 import jakarta.annotation.PostConstruct;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
@@ -42,15 +42,15 @@ public class ApiProperties {
         }
 
         if (!errors.isEmpty()) {
-            System.out.println(Utils.lineSeparator);
+            System.out.println(ConsoleUtil.lineSeparator);
             for (String error : errors) {
                 logger.error(error);
             }
             System.out.println("To get API key and token visit this site: https://trello.com/app-key");
-            System.out.println(Utils.lineSeparator);
+            System.out.println(ConsoleUtil.lineSeparator);
 
             System.out.println("Press Enter to continue...");
-            System.out.println(Utils.lineSeparator);
+            System.out.println(ConsoleUtil.lineSeparator);
             Scanner scanner = new Scanner(System.in);
             scanner.nextLine();
         }

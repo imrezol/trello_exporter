@@ -1,9 +1,8 @@
 package com.github.imrezol.trelloexporter.exporters;
 
-import com.github.imrezol.trelloexporter.Properties;
-import com.github.imrezol.trelloexporter.Utils;
 import com.github.imrezol.trelloexporter.generator.CardGenerator;
 import com.github.imrezol.trelloexporter.trello.dto.CardAttachment;
+import com.github.imrezol.trelloexporter.utils.FileUtil;
 import com.vdurmont.emoji.EmojiParser;
 
 import java.util.List;
@@ -30,7 +29,7 @@ public class CardDescriptionFixer {
     public static String fixAttachments(String desc, List<CardAttachment> attachments) {
         String fixedDesc = desc;
         for (CardAttachment attachment : attachments) {
-            fixedDesc = fixedDesc.replace(attachment.url, Utils.getUrl(attachment.getLocalFilename(), CardGenerator.attachmentsDir));
+            fixedDesc = fixedDesc.replace(attachment.url, FileUtil.getUrl(CardGenerator.attachmentsDir, attachment.getLocalFilename()));
         }
         return fixedDesc;
     }

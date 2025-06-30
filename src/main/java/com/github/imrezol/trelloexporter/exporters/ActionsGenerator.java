@@ -1,17 +1,10 @@
 package com.github.imrezol.trelloexporter.exporters;
 
-import com.github.imrezol.trelloexporter.Properties;
-import com.github.imrezol.trelloexporter.Utils;
 import com.github.imrezol.trelloexporter.trello.dto.Action;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
 import com.github.imrezol.trelloexporter.utils.FileUtil;
-import net.steppschuh.markdowngenerator.rule.HorizontalRule;
-import net.steppschuh.markdowngenerator.text.heading.Heading;
 
 import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 
 public abstract class ActionsGenerator {
