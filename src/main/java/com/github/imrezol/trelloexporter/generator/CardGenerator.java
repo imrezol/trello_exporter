@@ -32,7 +32,7 @@ public class CardGenerator {
     }
 
     public void generate() {
-        System.out.println(String.format(ConsoleUtil.pad(2, "Exporting Card:%s"), card.name));
+        System.out.println(ConsoleUtil.pad(2, "Exporting Card: " + card.name));
 
         Builder sb = new Builder()
                 .append(generator.begin(baseFilename))
@@ -163,8 +163,7 @@ public class CardGenerator {
         }
 
         Builder sb = new Builder()
-                .append(System.lineSeparator())
-                .append(generator.heading(String.format("Comments (" + card.badges.comments + "):"), 3))
+                .append(generator.heading("Comments (" + card.badges.comments + "):", 3))
                 .append(generator.rule());
 
         actions.stream()

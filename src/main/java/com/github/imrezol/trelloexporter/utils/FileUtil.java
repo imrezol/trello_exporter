@@ -9,10 +9,8 @@ import java.time.format.DateTimeFormatter;
 
 public class FileUtil {
 
-    public static final String baseDir = String.format(
-            "exports/%s",
-            DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"
-            ).format(DateUtil.exportDate));
+    public static final String baseDir = "exports/" +
+            DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss").format(DateUtil.exportDate);
 
     public static void ensureDirectory(String dir) {
         new File(dir).mkdirs();

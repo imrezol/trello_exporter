@@ -23,7 +23,7 @@ public class ActionsMdGenerator extends ActionsGenerator {
     public String generateHeader() {
         return new StringBuilder()
                 .append(System.lineSeparator())
-                .append(new Heading(String.format("Actions (%d):", actions.size()), 3)).append(System.lineSeparator())
+                .append(new Heading("Actions ("+ actions.size() + "):", 3)).append(System.lineSeparator())
                 .append(System.lineSeparator()).append(new HorizontalRule()).append(System.lineSeparator())
                 .toString();
 

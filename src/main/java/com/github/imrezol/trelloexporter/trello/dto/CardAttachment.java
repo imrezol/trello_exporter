@@ -25,9 +25,9 @@ public class CardAttachment {
         String baseName = FilenameUtils.getBaseName(fileName);
 
         if (ext.isEmpty()) {
-            return String.format("%s_%s", baseName, id);
+            return baseName + "_" + id;
         } else {
-            return String.format("%s_%s.%s", baseName, id, ext);
+            return baseName + "_" + id + "." + ext;
         }
 
     }

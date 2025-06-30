@@ -30,13 +30,13 @@ public class TrelloApi {
             .build();
 
     @PostConstruct
-    public void init()  {
+    public void init() {
         headers = new HttpHeaders();
         headers.set("accept", "application/json");
         headers.set("Authorization", "Bearer JWT TOKEN HERE");
     }
 
-    public String getBoards(){
+    public String getBoards() {
         RestTemplate restTemplate = new RestTemplate();
 
         String url = generateUrl("1/members/me/boards");
@@ -44,27 +44,27 @@ public class TrelloApi {
         return restTemplate.getForObject(url, String.class);
     }
 
-    public String getBoardJson(String boardId){
+    public String getBoardJson(String boardId) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = generateUrl(String.format("1//boards/%s", boardId));
+        String url = generateUrl("1//boards/" + boardId);
 
         return restTemplate.getForObject(url, String.class);
     }
 
-    public String getLists(String boardId){
+    public String getLists(String boardId) {
         RestTemplate restTemplate = new RestTemplate();
 
-        String url = generateUrl(String.format("1/boards/%s/lists",boardId));
+        String url = generateUrl("1/boards/" + boardId + "/lists");
 
 
         return restTemplate.getForObject(url, String.class);
     }
 
 
-    public String getCards(String listId){
+    public String getCards(String listId) {
         RestTemplate restTemplate = new RestTemplate();
 
-        String url = generateUrl(String.format("1/lists/%s/cards",listId));
+        String url = generateUrl("1/lists/" + listId + "/cards");
 
         return restTemplate.getForObject(url, String.class);
     }
@@ -72,7 +72,7 @@ public class TrelloApi {
     public String getCard(String cardId) {
         RestTemplate restTemplate = new RestTemplate();
 
-        String url = generateUrl(String.format("1/cards/%s",cardId));
+        String url = generateUrl("1/cards/" + cardId);
 
         return restTemplate.getForObject(url, String.class);
 
@@ -81,7 +81,7 @@ public class TrelloApi {
     public String getChecklists(String cardId) {
         RestTemplate restTemplate = new RestTemplate();
 
-        String url = generateUrl(String.format("1/cards/%s/checklists",cardId));
+        String url = generateUrl("1/cards/" + cardId + "/checklists");
 
         return restTemplate.getForObject(url, String.class);
     }
@@ -91,7 +91,7 @@ public class TrelloApi {
         // https://developer.atlassian.com/cloud/trello/guides/rest-api/api-introduction/#paging
         // https://stackoverflow.com/questions/51777063/how-can-i-get-all-actions-for-a-board-using-trellos-rest-api
 //        String url = generateUrl(String.format("1/cards/%s/",cardId)) + "&actions=all";
-        String url = generateUrl(String.format("1/cards/%s/actions",cardId))+"&limit=1000";
+        String url = generateUrl("1/cards/" + cardId + "/actions") + "&limit=1000";
 
         return restTemplate.getForObject(url, String.class);
     }
@@ -99,24 +99,27 @@ public class TrelloApi {
     public String getAttachments(String cardId) {
         RestTemplate restTemplate = new RestTemplate();
 
-        String url = generateUrl(String.format("1/cards/%s/attachments",cardId));
+        String url = generateUrl("1/cards/" + cardId + "/attachments");
 
         return restTemplate.getForObject(url, String.class);
     }
 
-    public  void downloadAttachment(Card card, CardAttachment attachment, String targetDir) {
+    public void downloadAttachment(Card card, CardAttachment attachment, String targetDir) {
 
-        System.out.println(ConsoleUtil.pad(1,attachment.fileName));
+        System.out.println(ConsoleUtil.pad(1, attachment.fileName));
 
         FileUtil.ensureDirectory(targetDir);
         String fileName = FileUtil.getUrl(targetDir, attachment.getLocalFilename());
 
-        String downloadUrl = generateUrl(String.format("/1/cards/%s/attachments/%s/download/%s",
-                card.id, attachment.id, attachment.fileName));
+        String downloadUrl = generateUrl(
+                "/1/cards/" + card.id +
+                        "/attachments/" + attachment.id +
+                        "/download/" + attachment.fileName
+        );
 
 
         Request request = new Request.Builder()
-                .header("Authorization",String.format(" OAuth oauth_consumer_key=\"%s\", oauth_token=\"%s\"", apiProperties.apiKey, apiProperties.token))
+                .header("Authorization", " OAuth oauth_consumer_key=\"" + apiProperties.apiKey + "\", oauth_token=\"" + apiProperties.token + "\"")
                 .url(downloadUrl).build();
         try (Response response = client.newCall(request).execute()) {
 
@@ -141,7 +144,7 @@ public class TrelloApi {
         }
     }
 
-    private String generateUrl(String path){
+    private String generateUrl(String path) {
         return UriComponentsBuilder.newInstance()
                 .scheme(apiProperties.scheme)
                 .host(apiProperties.apiUrl)
@@ -151,7 +154,6 @@ public class TrelloApi {
                 .encode()
                 .toUriString();
     }
-
 
 
 }

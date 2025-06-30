@@ -37,7 +37,7 @@ public class MdGenerator implements Generator {
     public String heading(String text, int level) {
         return new Builder()
                 .appendNewLine()
-                .append(String.format("#".repeat(level)))
+                .append("#".repeat(level))
                 .append(text)
                 .appendNewLine(2)
                 .toString();

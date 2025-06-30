@@ -5,6 +5,6 @@ public class ConsoleUtil {
     public static String lineSeparator = "*".repeat(20);
 
     public static String pad(int level, String string) {
-        return String.format("%s%s", " ".repeat(2*level), string);
+        return " ".repeat(2 * level) + string;
     }
 }

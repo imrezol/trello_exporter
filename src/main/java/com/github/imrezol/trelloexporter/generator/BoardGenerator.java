@@ -27,7 +27,7 @@ public class BoardGenerator {
 
     public void generate() {
 
-        System.out.println(String.format(ConsoleUtil.pad(1, "Exporting board:%s"), board.name));
+        System.out.println(ConsoleUtil.pad(1, "Exporting board: "+ board.name));
 
         Builder sb = new Builder()
                 .append(generator.begin(baseFilename))
