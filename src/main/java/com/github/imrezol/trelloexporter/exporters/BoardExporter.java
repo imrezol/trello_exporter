@@ -6,6 +6,7 @@ import com.github.imrezol.trelloexporter.trello.dto.Board;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
 import com.github.imrezol.trelloexporter.trello.dto.TrelloList;
 import com.github.imrezol.trelloexporter.utils.DateUtil;
+import com.github.imrezol.trelloexporter.utils.FileUtil;
 import net.steppschuh.markdowngenerator.link.Link;
 import net.steppschuh.markdowngenerator.table.Table;
 import net.steppschuh.markdowngenerator.text.heading.Heading;
@@ -35,7 +36,7 @@ public class BoardExporter {
         System.out.println(String.format(Utils.pad(1,"Exporting board:%s"), board.name));
 
         String mdDir = Utils.getUrl(board.id, Properties.baseDir);
-        Utils.ensureDirectory(mdDir);
+        FileUtil.ensureDirectory(mdDir);
 
         Path fileName = Paths.get( mdDir, Properties.getBoardMd());
 

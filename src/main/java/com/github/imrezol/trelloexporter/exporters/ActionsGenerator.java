@@ -4,6 +4,7 @@ import com.github.imrezol.trelloexporter.Properties;
 import com.github.imrezol.trelloexporter.Utils;
 import com.github.imrezol.trelloexporter.trello.dto.Action;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
+import com.github.imrezol.trelloexporter.utils.FileUtil;
 import net.steppschuh.markdowngenerator.rule.HorizontalRule;
 import net.steppschuh.markdowngenerator.text.heading.Heading;
 
@@ -45,7 +46,7 @@ public abstract class ActionsGenerator {
             sb.append(generateAction(action));
         }
 
-        Utils.saveToFile(getFilename(), sb.toString());
+        FileUtil.saveToFile(getFilename(), sb.toString());
 
     }
 

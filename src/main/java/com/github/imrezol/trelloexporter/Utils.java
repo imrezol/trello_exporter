@@ -24,31 +24,12 @@ public class Utils {
         return objectMapper;
     }
 
-
-    public static void ensureDirectory(String dir) {
-        new File(dir).mkdirs();
-    }
-
     @Deprecated
     public static String getUrl(String filename, String... dirParts) {
         String dirName = String.join("/", dirParts);
         return dirName + "/" + filename;
     }
 
-    public static String getUrl2(String... parts) {
-        return String.join(File.separator, parts);
-
-    }
-
-    public static void saveToFile(String filename, String str) {
-        Path path = Path.of(filename);
-        try {
-            ensureDirectory(path.getParent().toString());
-            Files.writeString(path, str, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public static String pad(int level, String string) {
         return String.format("%s%s", " ".repeat(2*level), string);

@@ -6,6 +6,7 @@ import com.github.imrezol.trelloexporter.trello.dto.Action;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
 import com.github.imrezol.trelloexporter.trello.dto.Checklist;
 import com.github.imrezol.trelloexporter.utils.DateUtil;
+import com.github.imrezol.trelloexporter.utils.FileUtil;
 import net.steppschuh.markdowngenerator.link.Link;
 import net.steppschuh.markdowngenerator.text.heading.Heading;
 import org.apache.logging.log4j.util.Strings;
@@ -29,7 +30,7 @@ public class CardExporter {
         System.out.println(String.format(Utils.pad(2, "Exporting Card:%s"), card.name));
 
         String cardDir = Utils.getUrl(card.id, Properties.baseDir, card.idBoard);
-        Utils.ensureDirectory(cardDir);
+        FileUtil.ensureDirectory(cardDir);
 
         Path fileName = Paths.get(cardDir, Properties.getCardMd());
 

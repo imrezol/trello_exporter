@@ -7,6 +7,7 @@ import com.github.imrezol.trelloexporter.Utils;
 import com.github.imrezol.trelloexporter.trello.dto.CardAttachment;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
 import com.github.imrezol.trelloexporter.utils.DateUtil;
+import com.github.imrezol.trelloexporter.utils.FileUtil;
 import net.steppschuh.markdowngenerator.link.Link;
 import net.steppschuh.markdowngenerator.table.Table;
 import net.steppschuh.markdowngenerator.text.heading.Heading;
@@ -33,7 +34,7 @@ public class AttachmentExporter {
         }
 
         String attachmentsDir = Paths.get(Properties.baseDir, card.idBoard, card.id, Properties.attachmentsDir).toString();
-        Utils.ensureDirectory(attachmentsDir);
+        FileUtil.ensureDirectory(attachmentsDir);
 
 
         StringBuilder sb = new StringBuilder()

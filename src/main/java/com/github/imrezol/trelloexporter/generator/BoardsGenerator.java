@@ -5,6 +5,7 @@ import com.github.imrezol.trelloexporter.Properties;
 import com.github.imrezol.trelloexporter.Utils;
 import com.github.imrezol.trelloexporter.trello.dto.Board;
 import com.github.imrezol.trelloexporter.utils.DateUtil;
+import com.github.imrezol.trelloexporter.utils.FileUtil;
 
 import java.util.List;
 
@@ -41,7 +42,7 @@ public  class BoardsGenerator {
 
         sb.append(generator.end());
 
-        Utils.saveToFile(Utils.getUrl2(Properties.baseDir, getFilename()), sb.toString());
+        FileUtil.saveToFile(FileUtil.getUrl2(Properties.baseDir, getFilename()), sb.toString());
     }
 
     private String generateHeader() {
@@ -62,7 +63,7 @@ public  class BoardsGenerator {
     }
 
     private String generateBoardsRow(Board board) {
-        String link = generator.link(board.name, Utils.getUrl2(board.id, getFilename()));
+        String link = generator.link(board.name, FileUtil.getUrl2(board.id, "Board" + generator.extension()));
 
         return generator.tableRow(link, board.desc, DateUtil.dateToString(board.dateLastActivity));
     }

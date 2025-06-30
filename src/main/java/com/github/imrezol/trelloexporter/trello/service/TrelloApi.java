@@ -3,6 +3,7 @@ package com.github.imrezol.trelloexporter.trello.service;
 import com.github.imrezol.trelloexporter.Utils;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
 import com.github.imrezol.trelloexporter.trello.dto.CardAttachment;
+import com.github.imrezol.trelloexporter.utils.FileUtil;
 import jakarta.annotation.PostConstruct;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -107,7 +108,7 @@ public class TrelloApi {
 
         System.out.println(Utils.pad(1,attachment.fileName));
 
-        Utils.ensureDirectory(targetDir);
+        FileUtil.ensureDirectory(targetDir);
         String fileName = Utils.getUrl(attachment.getLocalFilename(), targetDir);
 
         String downloadUrl = generateUrl(String.format("/1/cards/%s/attachments/%s/download/%s",
