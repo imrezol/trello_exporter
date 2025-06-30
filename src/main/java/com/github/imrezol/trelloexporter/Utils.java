@@ -43,15 +43,22 @@ public class Utils {
         new File(dir).mkdirs();
     }
 
+    @Deprecated
     public static String getUrl(String filename, String... dirParts) {
         String dirName = String.join("/", dirParts);
         return dirName + "/" + filename;
     }
 
-    public static void saveToFile(Path path, String json) {
+    public static String getUrl2(String... parts) {
+        return String.join(File.separator, parts);
+
+    }
+
+    public static void saveToFile(String filename, String str) {
+        Path path = Path.of(filename);
         try {
             ensureDirectory(path.getParent().toString());
-            Files.writeString(path, json, StandardCharsets.UTF_8);
+            Files.writeString(path, str, StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

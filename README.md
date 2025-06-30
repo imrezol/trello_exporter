@@ -85,6 +85,9 @@ exports
 * API Introduction: https://developer.atlassian.com/cloud/trello/guides/rest-api/api-introduction/
 * The Trello REST API: https://developer.atlassian.com/cloud/trello/rest/
 
+## TODO
+* genereta html files too (interface for md and html generators)
+* gett exported json via REST API
 
 jpackage
 https://docs.oracle.com/en/java/javase/14/jpackage/packaging-overview.html#GUID-C1027043-587D-418D-8188-EF8F44A4C06A

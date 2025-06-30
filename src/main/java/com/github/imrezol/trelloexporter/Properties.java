@@ -11,6 +11,7 @@ public class Properties {
     private static final String boardsFilename = "Boards";
     private static final String boardFilename = "Board";
     private static final String cardFilename = "Card";
+    public static final String actionsFilename = "Actions";
     public static final String attachmentsDir = "Attachments";
 
     public static final ZonedDateTime exportDate = ZonedDateTime.now();
@@ -29,12 +30,11 @@ public class Properties {
         return boardFilename + ".md";
     }
 
-    public static String getBoardJson() {
-        return boardFilename + ".json";
-    }
-
     public static String getCardMd() {
         return cardFilename + ".md";
     }
 
+    public static String getActionsMd() {
+        return actionsFilename + ".md";
+    }
 }

@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.imrezol.trelloexporter.exporters.BoardExporter;
 import com.github.imrezol.trelloexporter.exporters.BoardsExporter;
 import com.github.imrezol.trelloexporter.exporters.CardExporter;
+import com.github.imrezol.trelloexporter.exporters.html.BoardsHtmlExporter;
+import com.github.imrezol.trelloexporter.exporters.md.BoardsMdExporter;
 import com.github.imrezol.trelloexporter.trello.dto.*;
 import com.github.imrezol.trelloexporter.trello.service.ApiProperties;
 import com.github.imrezol.trelloexporter.trello.service.TrelloApi;
@@ -56,8 +58,14 @@ public class TrelloExporterApplication
             }
         }
 
-        downloadAttachments(boards);
+// TODO       downloadAttachments(boards);
 
+        debug(boards);
+
+        generateMdFiles(boards);
+    }
+
+    private static void debug(List<Board> boards) {
         Set<String> actionTypes = new HashSet<>();
 
         for (Board board : boards) {
@@ -81,8 +89,6 @@ public class TrelloExporterApplication
                 }
             }
         }
-
-        generateMdFiles(boards);
     }
 
     private void downloadAttachments(List<Board> boards) {
@@ -116,14 +122,16 @@ public class TrelloExporterApplication
     }
 
     private void generateMdFiles(List<Board> boards) {
-        BoardsExporter.export(boards);
+
+        new BoardsMdExporter(boards).generate();
+        new BoardsHtmlExporter(boards).generate();
 
         for (Board board : boards) {
             BoardExporter.export(board);
 
             Map<String, List<Checklist>> checklistsByCardId = getChecklistsByCardId(board);
             Map<String, List<Action>> actionsByCardId = getActionsByCardId(board);
-            Map<String, TrelloList> listsById = getlistsById(board);
+            Map<String, TrelloList> listsById = getListsByCard(board);
             for (Card card : board.cards) {
                 CardExporter.export(board.name, card, checklistsByCardId.get(card.id), listsById.get(card.idList).name, actionsByCardId.get(card.id) == null ? Collections.emptyList() : actionsByCardId.get(card.id));
             }
@@ -152,7 +160,7 @@ public class TrelloExporterApplication
         return checklistsByCardId;
     }
 
-    private static Map<String, TrelloList> getlistsById(Board board) {
+    private static Map<String, TrelloList> getListsByCard(Board board) {
         Map<String, TrelloList> listsById = new HashMap<>();
 
         for (TrelloList trelloList : board.lists) {
