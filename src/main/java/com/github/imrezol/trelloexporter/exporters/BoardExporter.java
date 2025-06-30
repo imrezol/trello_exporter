@@ -5,6 +5,7 @@ import com.github.imrezol.trelloexporter.Utils;
 import com.github.imrezol.trelloexporter.trello.dto.Board;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
 import com.github.imrezol.trelloexporter.trello.dto.TrelloList;
+import com.github.imrezol.trelloexporter.utils.DateUtil;
 import net.steppschuh.markdowngenerator.link.Link;
 import net.steppschuh.markdowngenerator.table.Table;
 import net.steppschuh.markdowngenerator.text.heading.Heading;
@@ -115,7 +116,7 @@ public class BoardExporter {
 
     private static String getHeader(Board board) {
         StringBuilder sb = new StringBuilder()
-                .append("Export date: ").append(Utils.dateToStringWithTimeZone(Properties.exportDate)).append(System.lineSeparator())
+                .append("Export date: ").append(DateUtil.dateToStringWithTimeZone(Properties.exportDate)).append(System.lineSeparator())
                 .append("<br>").append(System.lineSeparator())
                 .append(new Link("Back to boards","../Boards.md")).append(System.lineSeparator())
                 .append("<br>").append(System.lineSeparator())

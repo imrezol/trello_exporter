@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.imrezol.trelloexporter.Utils;
 import com.github.imrezol.trelloexporter.exporters.CardDescriptionFixer;
+import com.github.imrezol.trelloexporter.utils.DateUtil;
 import net.steppschuh.markdowngenerator.text.Text;
 import net.steppschuh.markdowngenerator.text.code.CodeBlock;
 import net.steppschuh.markdowngenerator.text.emphasis.BoldText;
@@ -39,7 +40,7 @@ public class Action {
 
     public String toMd(List<CardAttachment> attachemnts) {
         StringBuilder sb = new StringBuilder()
-                .append(new BoldText("Date:")).append(" "+ Utils.dateToString(date)).append("<br>").append(System.lineSeparator())
+                .append(new BoldText("Date:")).append(" "+ DateUtil.dateToString(date)).append("<br>").append(System.lineSeparator())
                 .append(new BoldText("User:")).append(String.format(" %s (%s)",memberCreator.fullName, memberCreator.username)).append("<br>").append(System.lineSeparator());;
 
         switch (type) {

@@ -6,6 +6,7 @@ import com.github.imrezol.trelloexporter.Properties;
 import com.github.imrezol.trelloexporter.Utils;
 import com.github.imrezol.trelloexporter.trello.dto.CardAttachment;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
+import com.github.imrezol.trelloexporter.utils.DateUtil;
 import net.steppschuh.markdowngenerator.link.Link;
 import net.steppschuh.markdowngenerator.table.Table;
 import net.steppschuh.markdowngenerator.text.heading.Heading;
@@ -47,7 +48,7 @@ public class AttachmentExporter {
                 .addRow("Name", "Filename","Date", "Size");
 
         for (CardAttachment attachment : card.attachments) {
-            tableBuilder.addRow(new Link(attachment.name, Utils.getUrl(attachment.getLocalFilename(), Properties.attachmentsDir)), attachment.fileName, Utils.dateToString(attachment.date), FileUtils.byteCountToDisplaySize(attachment.bytes));
+            tableBuilder.addRow(new Link(attachment.name, Utils.getUrl(attachment.getLocalFilename(), Properties.attachmentsDir)), attachment.fileName, DateUtil.dateToString(attachment.date), FileUtils.byteCountToDisplaySize(attachment.bytes));
         }
 
         writer.write(tableBuilder.build().toString());

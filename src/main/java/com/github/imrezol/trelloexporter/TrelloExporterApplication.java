@@ -4,14 +4,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.imrezol.trelloexporter.exporters.BoardExporter;
-import com.github.imrezol.trelloexporter.exporters.BoardsExporter;
+import com.github.imrezol.trelloexporter.generator.BoardsGenerator;
 import com.github.imrezol.trelloexporter.exporters.CardExporter;
-import com.github.imrezol.trelloexporter.exporters.html.BoardsHtmlExporter;
-import com.github.imrezol.trelloexporter.exporters.md.BoardsMdExporter;
+import com.github.imrezol.trelloexporter.generator.Generator;
+import com.github.imrezol.trelloexporter.generator.HtmlGenerator;
+import com.github.imrezol.trelloexporter.generator.MdGenerator;
 import com.github.imrezol.trelloexporter.trello.dto.*;
 import com.github.imrezol.trelloexporter.trello.service.ApiProperties;
 import com.github.imrezol.trelloexporter.trello.service.TrelloApi;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -62,7 +62,7 @@ public class TrelloExporterApplication
 
         debug(boards);
 
-        generateMdFiles(boards);
+        generateFiles(boards);
     }
 
     private static void debug(List<Board> boards) {
@@ -121,10 +121,13 @@ public class TrelloExporterApplication
         System.out.println();
     }
 
-    private void generateMdFiles(List<Board> boards) {
+    private void generateFiles(List<Board> boards) {
 
-        new BoardsMdExporter(boards).generate();
-        new BoardsHtmlExporter(boards).generate();
+        Generator htmlGenerator = new HtmlGenerator();
+        Generator mdGenerator = new MdGenerator();
+
+        new BoardsGenerator(htmlGenerator, boards).generate();
+        new BoardsGenerator(mdGenerator, boards).generate();
 
         for (Board board : boards) {
             BoardExporter.export(board);

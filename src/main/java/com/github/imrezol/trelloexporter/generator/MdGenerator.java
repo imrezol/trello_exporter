@@ -1,0 +1,110 @@
+package com.github.imrezol.trelloexporter.generator;
+
+import com.github.imrezol.trelloexporter.utils.Builder;
+import com.github.imrezol.trelloexporter.Properties;
+import com.github.imrezol.trelloexporter.Utils;
+import com.github.imrezol.trelloexporter.utils.DateUtil;
+
+import java.time.ZonedDateTime;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
+/*
+https://google.github.io/styleguide/docguide/style.html
+https://www.markdownguide.org/basic-syntax/
+ */
+public class MdGenerator implements Generator {
+
+    @Override
+    public String extension(){
+        return ".md";
+    }
+
+    @Override
+    public String begin(String title) {
+        return null;
+    }
+
+    @Override
+    public String end() {
+        return null;
+    }
+
+    @Override
+    public String heading(String text, int level) {
+        return new Builder()
+                .appendNewLine()
+                .append(String.format("#".repeat(level)))
+                .append(text)
+                .appendNewLine(2)
+                .toString();
+    }
+
+    @Override
+    public  String link(String text, String uri) {
+        //TODO escape chars
+        return "[" + text + "](" + uri + ")";
+    }
+
+    @Override
+    public  String tableRow(String ...cells) {
+        Builder sb = new Builder();
+        sb.append(
+                Arrays.stream(cells)
+                        .map(cell -> cell.replace("|","\\|"))
+                        .collect(Collectors.joining(" | ", "| ", " |"))
+        );
+        sb.appendNewLine();
+        return sb.toString();
+    }
+
+    @Override
+    public  String tableHeader(String ...headers) {
+        Builder sb = new Builder();
+
+        sb.append(
+                Arrays.stream(headers)
+                        .map(header -> header.replace("|","\\|"))
+                        .collect(Collectors.joining(" | ", "| ", " |"))
+        );
+        sb.appendNewLine();
+
+        sb.append(
+                Arrays.stream(headers)
+                        .map(header -> "-".repeat(header.length()))
+                        .collect(Collectors.joining(" | ", "| ", " |"))
+        );
+        sb.appendNewLine();
+
+        return sb.toString();
+    }
+
+    @Override
+    public String tableFoot() {
+        return null;
+    }
+
+    @Override
+    public String bold(String str) {
+        return "**"+str.replace("*","\\*")+"**";
+    }
+
+    @Override
+    public String property(String name, String value) {
+        return new Builder()
+                .append(bold(name))
+                .append(": ")
+                .appendLine(value)
+                .toString();
+    }
+
+    @Override
+    public String exportedDateProperty() {
+        return property("Export date", DateUtil.dateToStringWithTimeZone(Properties.exportDate));
+    }
+
+    @Override
+    public String property(String name, ZonedDateTime dateTime) {
+        return property(name, DateUtil.dateToString(dateTime));
+    }
+}

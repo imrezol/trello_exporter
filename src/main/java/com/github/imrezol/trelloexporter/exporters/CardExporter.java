@@ -5,6 +5,7 @@ import com.github.imrezol.trelloexporter.Utils;
 import com.github.imrezol.trelloexporter.trello.dto.Action;
 import com.github.imrezol.trelloexporter.trello.dto.Card;
 import com.github.imrezol.trelloexporter.trello.dto.Checklist;
+import com.github.imrezol.trelloexporter.utils.DateUtil;
 import net.steppschuh.markdowngenerator.link.Link;
 import net.steppschuh.markdowngenerator.text.heading.Heading;
 import org.apache.logging.log4j.util.Strings;
@@ -61,10 +62,10 @@ public class CardExporter {
         }
 
         sb.append("List: ").append(listName).append("<br>").append(System.lineSeparator());
-        sb.append("Last activity: ").append(Utils.dateToString(card.dateLastActivity)).append("<br>").append(System.lineSeparator());
+        sb.append("Last activity: ").append(DateUtil.dateToString(card.dateLastActivity)).append("<br>").append(System.lineSeparator());
 
         if (card.due != null) {
-            sb.append("Due: " + Utils.dateToString(card.due)).append(System.lineSeparator());
+            sb.append("Due: " + DateUtil.dateToString(card.due)).append(System.lineSeparator());
         }
 
 
@@ -82,7 +83,7 @@ public class CardExporter {
 
     private static void generateHeader(BufferedWriter writer, String boardName) throws IOException {
         StringBuilder sb = new StringBuilder()
-                .append("Export date: " + Utils.dateToStringWithTimeZone(Properties.exportDate)).append(System.lineSeparator())
+                .append("Export date: " + DateUtil.dateToStringWithTimeZone(Properties.exportDate)).append(System.lineSeparator())
                 .append("<br>").append(System.lineSeparator())
                 .append(new Link("Back to boards", "../../Boards.md")).append(System.lineSeparator())
                 .append("<br>").append(System.lineSeparator())
